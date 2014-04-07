@@ -22,6 +22,7 @@ gem "mongoid_slug", github: "digitalplaywright/mongoid-slug"
 gem 'mongoid-tags-arent-hard'
 gem 'rails_config'
 gem 'haml'
+gem 'kaminari'
 
 group :development, :test do
   gem 'awesome_print', :require => false

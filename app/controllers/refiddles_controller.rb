@@ -3,8 +3,6 @@ class RefiddlesController < ApplicationController
   load_and_authorize_resource 
 
 
-
-
   def new
   end
 
@@ -38,9 +36,6 @@ class RefiddlesController < ApplicationController
     render_destroy_response @refiddle
   end
 
-  def revisions
-    @revisions = paged(@refiddle.revisions)
-  end
 
   private 
 

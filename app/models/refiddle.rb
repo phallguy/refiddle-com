@@ -101,7 +101,7 @@ class Refiddle
 
   private 
     def create_short_code
-      Sequence.next(Refiddle,initial:1300).to_s(36)
+      Sequence.next(Refiddle,initial:33000).to_s(36)
     end
 
 end

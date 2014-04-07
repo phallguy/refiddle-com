@@ -387,6 +387,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   json_spec
+  kaminari
   less-rails
   mongoid!
   mongoid-tags-arent-hard
