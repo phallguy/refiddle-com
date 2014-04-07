@@ -2,6 +2,8 @@ class RefiddlePattern
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  LITERALEXP_PATTERN = /\A\/(?<source>[^\/]+)\/(?<options>\w*)\z/m;
+
   # @!attribute
   # @return [Refiddle] that the pattern belongs to.
   embedded_in :refiddle, inverse_of: nil
@@ -9,7 +11,7 @@ class RefiddlePattern
     # @!attribute
   # @return [String] the actual regex pattern
   field :regex, type: String
-    validates :regex, format: /\A\/.*\/[a-z]*\z/
+    validates :regex, format: LITERALEXP_PATTERN
 
   # @!attribute
   # @return [String] corupus of text to test the {#regex} against.

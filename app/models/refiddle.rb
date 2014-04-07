@@ -44,7 +44,6 @@ class Refiddle
   # @!attribute
   # @return [String] a custom deliminator to use when marking corpus test sections. 
   field :corpus_deliminator, type: String
-    validates :corpus_deliminator, length: { is: 1 }, allow_nil: true
 
   # @!attribute
   # @return [RefiddlePattern] the current published pattern.
