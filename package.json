@@ -1,0 +1,19 @@
+{
+  "name": "refiddle-com",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-haml": "~0.7.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-coffeelint": "0.0.7"
+  },
+  "description": "ERROR: No README data found!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

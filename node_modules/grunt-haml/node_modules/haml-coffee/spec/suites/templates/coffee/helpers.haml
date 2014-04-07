@@ -1,0 +1,7 @@
+= surround '(', ')', ->
+  %a{:href => "food"}= @food
+click
+= succeed '.', ->
+  %a{:href=>"thing"}= @thing
+= precede '*', ->
+  %span.small= @really

@@ -1,0 +1,16 @@
+!!!
+%html{ class: "no-js #{page_classes}" }
+  %head
+    %title= title || "Refiddle"
+    = render partial: "shared/head"
+  %body
+    #body-content      
+      .container.page-alerts
+        - flash.each do |name,msg|
+          .alert.slide{ class: "alert-#{name}" }= msg
+      = yield(:pre_content)
+      = content_for?(:content) ? yield(:content) : yield
+      = yield(:post_content)
+    #main-chrome
+
+    = render partial: "shared/scripts"

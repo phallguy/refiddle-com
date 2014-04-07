@@ -1,0 +1,66 @@
+// // http://www.google.com/fonts#UsePlace:use/Collection:Playfair+Display:400,700,400italic|Roboto+Slab:400,300|Roboto+Condensed
+@import url(https://fonts.googleapis.com/css?family=Roboto:700,500,400,300,200|Roboto+Condensed);
+
+body
+{
+  font-weight: 300;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2
+{
+  font-family: @font-family-heading;
+}
+
+h3, h4, h5, h6
+{
+  font-weight: 300;
+  margin-bottom: @grid-gutter-width;
+}
+
+h5, h6
+{
+  margin-bottom: 0;
+}
+
+
+
+h1, h2, h3, h4, h5, h6
+{
+
+  + .nav
+  {
+    margin-top: @grid-gutter-width;
+  }
+}
+
+.page-title
+{
+  border-bottom: solid 1px @chrome-border;
+  margin: 0 0 @grid-gutter-width 0;
+  padding: 0 0 @line-height-computed / 2;
+  color: @headings-title-color;
+}
+
+#body-content .container.page-alerts + .container > h1.page-title:first-child
+{
+  margin-top: @grid-gutter-width;
+}
+
+.text-muted a
+{
+  color: @text-muted;
+  border-bottom: dotted 1px mix( @body-bg, @text-muted );
+  &:hover
+  {
+    text-decoration: none;
+  }
+}
+
+noscript
+{
+  padding: @grid-gutter-width 0;
+  text-align: center;
+  color: @text-muted;
+  display: block;
+}
