@@ -58,15 +58,6 @@ class RegexRunner::Base
   end
   
 
-  class << self
-    # Creates a new instance of a runner given it's name.
-    def find( name )
-      case name
-      when /ruby/, :ruby, :Ruby; Ruby.new
-      when /(\.|dot)net/i, :dotnet, :'.NET'; DotNet.new
-      end
-    end
-  end
 
 end
 
