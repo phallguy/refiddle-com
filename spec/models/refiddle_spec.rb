@@ -2,9 +2,6 @@ require 'spec_helper'
 
 
 describe Refiddle do
-  it "creates a valid fiddle from the factory" do
-    create(:refiddle).should be_valid
-  end
 
   it "delegates" do
     refiddle = create(:refiddle)
@@ -15,6 +12,12 @@ describe Refiddle do
 
   it "generates a short code" do
     create(:refiddle).short_code.should_not be_empty
+  end
+
+  describe "validations" do
+    it "creates a valid fiddle from the factory" do
+      create(:refiddle).should be_valid
+    end
   end
 
   describe "versions" do
@@ -88,6 +91,14 @@ describe Refiddle do
 
       it "does not copy the revision history" do
         fork.revisions.should be_empty
+      end
+
+      it "knows where it was forked from" do
+        fork.reload.forked_from.should == refiddle
+      end
+
+      it "keeps track of it's forks" do
+        refiddle.reload.forks.should include(fork)
       end
 
       %w{ title description tags }.each do |prop|

@@ -16,6 +16,10 @@ FactoryGirl.define do
     trait :with_phone do
       phone_number { generate :phone_number }
     end
+
+    trait :admin do
+      roles [:admin]
+    end
   end
 
   factory :refiddle_pattern do

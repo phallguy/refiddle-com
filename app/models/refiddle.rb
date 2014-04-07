@@ -32,7 +32,7 @@ class Refiddle
 
   # @!attribute 
   # @return [Boolean] indicates if the fiddle should be publicly shared with other visitors.
-  field :share,   type: Boolean, default: false
+  field :share,   type: Boolean, default: true
     def share=(val)
       super val.to_bool
     end
@@ -41,8 +41,10 @@ class Refiddle
   # @return [Boolean] indicates if the fiddle is locked and cannot be edited by other users.
   field :locked,  type: Boolean, default: false
 
-  taggable_with :tags
-
+  # @!attribute
+  # @return [String] a custom deliminator to use when marking corpus test sections. 
+  field :corpus_deliminator, type: String
+    validates :corpus_deliminator, length: { is: 1 }, allow_nil: true
 
   # @!attribute
   # @return [RefiddlePattern] the current published pattern.
@@ -60,12 +62,17 @@ class Refiddle
   embeds_many :revisions, class_name: "RefiddlePattern", inverse_of: :refiddle
 
   # @!attribute
+  # @return [Array<String>] array of tags on the fiddle.
+  taggable_with :tags
+
+
+  # @!attribute
   # @return [User] user that owns the fiddle.
   belongs_to :user
 
   # @!attribute
   # @return [Array<Refiddle>] array of fiddles that were forked from this fiddle.
-  has_and_belongs_to_many :forks, class_name: "Refiddle", inverse_of: :forked_from
+  has_many :forks, class_name: "Refiddle", inverse_of: :forked_from
 
   # @!attribute
   # @return [Refiddle] the fiddle that this one was forked from.
@@ -89,7 +96,7 @@ class Refiddle
   # @param [User] user that the forked fiddle should belong to.
   # @return [Refiddle] the new fiddle.
   def fork!(user=nil)
-    forks.create pattern: pattern.dup, title: title, description: description, user: user, tags: tags
+    forks.create! pattern: pattern.dup, title: title, description: description, user: user, tags: tags
   end
 
   private 

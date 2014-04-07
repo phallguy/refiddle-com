@@ -9,7 +9,7 @@ class RefiddlePattern
     # @!attribute
   # @return [String] the actual regex pattern
   field :regex, type: String
-    validates_presence_of :regex
+    validates :regex, format: /\A\/.*\/[a-z]*\z/
 
   # @!attribute
   # @return [String] corupus of text to test the {#regex} against.
