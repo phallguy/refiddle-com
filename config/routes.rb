@@ -10,7 +10,7 @@ RefiddleCom::Application.routes.draw do
   end
 
   resources :tagged, only: [:index,:show], path: "tagged"
-  resources :users
+  resources :users, only: [:index,:show,:edit,:update]
   resources :stackoverflow, only: [:index]
 
   resources :profiles, path: "by", only: [:index,:show]

@@ -9,14 +9,9 @@ class UsersController < ApplicationController
   def show
   end
 
-  def new
-  end
-
-  def create
-  end
-
   def update
-
+    @user.write_attributes(user_params)
+    render_modified_response @user    
   end
 
   private
