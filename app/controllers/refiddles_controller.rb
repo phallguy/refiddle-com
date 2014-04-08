@@ -2,6 +2,11 @@ class RefiddlesController < ApplicationController
   skip_authorize_resource only: [:update]
   load_and_authorize_resource 
 
+  def index
+    @refiddles = paged(@refiddles)
+      .recent
+      .includes(:user)
+  end
 
   def new
   end

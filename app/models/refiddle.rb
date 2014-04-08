@@ -72,10 +72,11 @@ class Refiddle
   # @!attribute
   # @return [Array<Refiddle>] array of fiddles that were forked from this fiddle.
   has_many :forks, class_name: "Refiddle", inverse_of: :forked_from
+    field :forks_count, type: Integer
 
   # @!attribute
   # @return [Refiddle] the fiddle that this one was forked from.
-  belongs_to :forked_from, class_name: "Refiddle", inverse_of: :forks
+  belongs_to :forked_from, class_name: "Refiddle", inverse_of: :forks, counter_cache: :forks_count
 
 
   # @!group Scopes

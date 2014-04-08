@@ -1,6 +1,6 @@
 RefiddleCom::Application.routes.draw do
 
-  resources :refiddles, except: :index, controller: :refiddles do
+  resources :refiddles, controller: :refiddles do
     resources :forks, only: [:create,:index]
     resources :revisions, only: [:index,:show] do
       member do

@@ -15,10 +15,10 @@ unless abbr
     end
   end
 
-  json.revisions_count refiddle.revisions.count
+  json.revisions_count refiddle.revisions.size
   json.revisions_url refiddle_revisions_url(refiddle)
 
-  json.forks_count refiddle.forks.count
+  json.forks_count refiddle.forks_count
   json.forks_url refiddle_forks_url(refiddle)
 
   if refiddle.forked_from
