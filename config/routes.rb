@@ -11,6 +11,8 @@ RefiddleCom::Application.routes.draw do
 
   resources :tagged, only: [:index,:show], path: "tagged"
   resources :users
+  resources :stackoverflow, only: [:index]
+  get "stackoverflow/:id(-:title)" => "stackoverflow#show", as: :show_stackoverflow
 
   post "regex/replace/:flavor" => "play#replace", as: :regex_replace
   post "regex/evaluate/:flavor" => "play#evaluate", as: :regex_evaluate

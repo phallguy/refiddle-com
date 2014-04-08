@@ -378,6 +378,7 @@ DEPENDENCIES
   capi-sous!
   capybara
   coffee-rails (~> 4.0.0)
+  dalli
   database_cleaner
   factory_girl_rails
   fakeweb

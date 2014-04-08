@@ -24,6 +24,8 @@ gem 'rails_config'
 gem 'haml'
 gem 'kaminari'
 gem 'cancan'
+gem 'dalli'
+
 
 group :development, :test do
   gem 'awesome_print', :require => false

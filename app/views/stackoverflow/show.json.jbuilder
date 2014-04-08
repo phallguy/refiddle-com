@@ -1,0 +1,1 @@
+json.partial! "stackoverflow/question", question: @question
