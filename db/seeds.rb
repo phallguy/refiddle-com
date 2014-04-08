@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-User.create( name: "Example" ) unless User.where( slug: "example" ).first
+User.create( name: "Example" ) unless User.where( name: "Example" ).first
 
 example_user = User.find( "example" )
 

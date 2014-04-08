@@ -8,6 +8,9 @@ class Refiddle
 
 
   validate :no_urls_when_shared
+  validate :not_unchanged_sample
+  validate :not_unchanged_fork
+
   honey_pot :email
 
   # @!attribute
@@ -97,7 +100,7 @@ class Refiddle
 
   # @!attribute
   # @return [Refiddle] the fiddle that this one was forked from.
-  belongs_to :forked_from, class_name: "Refiddle", inverse_of: :forks, counter_cache: :forks_count
+  belongs_to :forked_from, class_name: "Refiddle", inverse_of: :forks, counter_cache: :forks_count, autosave: true
 
 
   # @!group Scopes
@@ -124,8 +127,17 @@ class Refiddle
   # Forks the current fiddle and creates a new one for the given user.
   # @param [User] user that the forked fiddle should belong to.
   # @return [Refiddle] the new fiddle.
-  def fork!(user=nil)
-    forks.create! pattern: pattern.dup, title: title, description: description, user: user, tags: tags
+  def fork!(attrs)
+    forked_attrs = { pattern: pattern.dup, title: title, description: description, tags: tags }
+    forks.create forked_attrs.merge( attrs )
+  end
+
+  class << self
+    # Creates a new refiddle with sample data.
+    # @param [Hash] attrs initial attributes to assign to the refiddle.
+    def create_sample(attrs={})      
+      new SAMPLE_ATTRS.merge(attrs)
+    end
   end
 
   private 
@@ -133,6 +145,7 @@ class Refiddle
     URL_PATTERN = /\w+\.[a-z]{2,}/i
     PROTOCOL_PATTERN = /[a-z]+:\/\/?\w+/i
     LINK_PATTERN = /href|src|rel=/i
+    SAMPLE_ATTRS = { regex: "/k[^\s]*s/g", corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.", replace_text: "tacos" }.freeze
 
     def validate_no_url(field)
       val = send(field)
@@ -147,6 +160,14 @@ class Refiddle
       end
 
       true
+    end
+
+    def not_unchanged_sample
+      errors.add :base, "Make it your own, change the regex, corpus text or replace text" if SAMPLE_ATTRS.all?{|k,v| send(k) == v}
+    end
+
+    def not_unchanged_fork
+      errors.add :base, "Make it your own, change the regex, corpus text or replace text" if forked_from && SAMPLE_ATTRS.all?{ |k,v| send(k) == forked_from.send(k) }
     end
 
     def locked_has_user

@@ -5,3 +5,11 @@
     %li= render refiddle
 
 = paginate @refiddles
+
+
+- content_for :asside do
+  - if can?(:update,@user)
+    = link_to "Update Profile", edit_user_path(@user), class: "btn btn-default btn-block"
+
+  - if @user == current_user
+    = link_to "Sign Out", signout_path, class: "btn btn-danger btn-block"

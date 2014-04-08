@@ -1,6 +1,6 @@
-.container
-  %h1.page-title= title "Sign In"
-
-  .row
-    .col-md-8
-      = render "signin_form", return_to: safe_return_path(root_path)
+- content_for :content do
+  .container
+    .row
+      .col-md-8.col-md-offset-2
+        %h1.page-title= title "Sign In"
+        = render "signin_form", return_to: safe_return_path(root_path)

@@ -48,7 +48,15 @@ describe Refiddle do
       end
     end
 
+    it "requires changes to sample" do
+      Refiddle.create_sample.should_not be_valid
+    end
 
+    it "requires changes to fork"  do
+      original = create(:refiddle)
+      fork = original.fork!( {} )
+      fork.should_not be_valid
+    end
   end
 
   describe "versions" do
@@ -140,10 +148,10 @@ describe Refiddle do
     end
 
     describe "#fork" do
-      let(:fork){ refiddle.fork! }
+      let(:fork){ refiddle.fork! regex: "/forked/" }
 
       it "copies the pattern" do
-        fork.pattern.regex.should         == "/versions/"
+        fork.pattern.regex.should         == "/forked/"
         fork.pattern.corpus_text.should   == "I'm a version"
         fork.pattern.replace_text.should  == "$1"
       end

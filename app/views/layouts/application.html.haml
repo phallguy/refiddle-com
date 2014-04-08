@@ -22,20 +22,27 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to "Refiddle", root_path, class: "navbar-brand"
+          = link_to root_path, class: "navbar-brand" do
+            .visible-xs
+              Re
+            .hidden-xs
+              Refiddle
+          #page-actions-mobile.visible-xs
+            = content_for?(:page_actions_mobile) ? yield(:page_actions_mobile) : yield(:page_actions)
+
         #page-nav-collapse.collapse.navbar-collapse
-          #page-actions
+          #page-actions.navbar-left
             = yield :page_actions
           #page-nav-actions
             - if content_for?(:page_nav_actions)
               = yield :page_nav_actions
             - else
               %ul.list-inline.navbar-right
-                %li= link_to "Browse", tagged_index_path, class: "btn btn-default navbar-btn"
+                %li= link_to "Browse", tagged_index_path, class: "btn btn-primary navbar-btn"
                 - if current_user
-                  %li= link_to current_user.name, profile_path(current_user), class: "btn btn-default navbar-btn"
+                  %li= link_to current_user.first_name, profile_path(current_user), class: "btn btn-success navbar-btn"
                 - else
-                  %li= link_to "Sign In", signin_path, class: "btn btn-default navbar-btn"
+                  %li= link_to "Sign In", signin_path, class: "btn btn-success navbar-btn"
 
 
     = render partial: "shared/scripts"

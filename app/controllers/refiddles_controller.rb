@@ -10,6 +10,7 @@ class RefiddlesController < ApplicationController
   end
 
   def new
+    @refiddle = Refiddle.create_sample( user: current_user )
   end
 
   def show

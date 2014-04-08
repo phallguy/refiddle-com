@@ -17,5 +17,5 @@
   .refiddle-description!= refiddle.description
   .refiddle-corpus!= refiddle.corpus_text.gsub( /\n/, "<br />" )
   .refiddle-actions
-    = link_to "Edit", refiddle_path(refiddle), class: "btn btn-default"
+    = link_to "Open", refiddle_path(refiddle), class: "btn btn-default"
     = link_to "Fork", refiddle_path(refiddle,fork: true), class: "btn btn-default"

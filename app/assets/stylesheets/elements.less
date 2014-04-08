@@ -1,6 +1,12 @@
 .refiddle
 {
   position: relative;
+  margin-bottom: @line-height-computed;
+
+  border-bottom: solid 1px @chrome-border;
+  padding-bottom: @line-height-computed;
+  
+
   .refiddle-stats
   {
     float: right;
@@ -9,21 +15,22 @@
     {
       float: left;
       padding: @padding-base-vertical @padding-base-horizontal;
-      background: @brand-info;
-      color: @brand-info-color;
+      background: @input-group-addon-bg;
+      color: @text-color;
       border-radius: @border-radius-large;
       text-align: center;
       margin-left: @padding-base-horizontal;
 
       .data-value
       {
-        font-size: @font-size-h2;
+        font-size: @font-size-h3;
         margin: 0;
       }
 
       .data-label
       {
         font-weight: inherit;
+        font-size: @font-size-small;
         margin: 0;
       }
     }
@@ -98,4 +105,9 @@
 {
   background: @state-success-bg;
   color: @state-success-text; 
+}
+
+.btn-stackoverflow
+{
+  .button-variant( #FFF; #FE7924; #FE7924 );
 }

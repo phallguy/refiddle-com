@@ -6,8 +6,8 @@ class ForksController < ApplicationController
   end
 
   def create
-    @fork = @refiddle.fork!(current_user)
-    render_modified_response @fork, path: refiddle_url(@fork)
+    @refiddle = @refiddle.fork!( fork_params )
+    render_modified_response @refiddle, path: ->{ refiddle_url(@refiddle) }, view: "refiddles/show"
   end
 
 
@@ -16,7 +16,9 @@ class ForksController < ApplicationController
       params.fetch(:refiddle,{}).permit(
         :title,:description,:share,:locked,:corpus_deliminator,:tags,
         pattern_attributes: [:regex,:corpus_text,:replace_text]
-        )
+        ).tap do |wl|
+        wl[:user] = current_user
+      end
     end
 
 

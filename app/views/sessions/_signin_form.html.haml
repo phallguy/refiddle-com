@@ -1,16 +1,16 @@
 - return_to ||= dashboard_path
 - return_to = URI.escape( return_to )
 .row
-  .col-md-4.col-sm-4
-    %p= link_to "Sign in With Google", "/auth/google?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-google"
-    %p= link_to "Sign in With Facebook", "/auth/facebook?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-facebook"
-    %p= link_to "Sign in With Twitter", "/auth/twitter?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-twitter"
-    %p= link_to "Sign in With StackOverflow", "/auth/stackexchange?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-stackoverflow"
+  .col-sm-5
+    %p= link_to "With Google", "/auth/google?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-google"
+    %p= link_to "With Facebook", "/auth/facebook?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-facebook"
+    %p= link_to "With Twitter", "/auth/twitter?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-twitter"
+    %p= link_to "With StackOverflow", "/auth/stackexchange?return_to=#{ return_to }", class: "btn btn-default btn-lg btn-block btn-stackoverflow"
   .col-md-6
     %h3 It's Safe
     Using your Google, Facebook or Twitter account <b>will not allow Refiddle</b> to read or modify your email or allow us to post to your wall.
 %hr
 %p 
-  Backyard Places uses Google, Facebook &amp; Twitter to maintain the highest level of security and to eliminate problems with forgotten passwords.
+  Refiddle uses these providers to maintain the highest level of security and to eliminate problems with forgotten passwords.
   We never get access to your account and only use them to verify who you are.
 %p.text-muted If you don't have an account then you can create a <a href="https://accounts.google.com/SignUp" target="_blank">new Google account right now</a>.

@@ -1,3 +1,14 @@
 %h1.page-title= title @user.name
-= @user.email
-= @user.provider
+.data-label Email
+.data-value= @user.email
+.data-label Provider
+.data-value= @user.provider
+.data-label Roles
+.data-value
+  - @user.roles && @user.roles.each do |role|
+    .label.label-default= role
+
+- content_for :asside do
+  = link_to "Edit Profile", edit_user_path(@user), class: "btn btn-default btn-block"
+  - if can?(:index,User)
+    = link_to "All Users", users_path, class: "btn btn-default btn-block"

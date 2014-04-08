@@ -1,0 +1,28 @@
+= form_for user do |f|
+  .form-group
+    = f.label :name
+    = f.text_field :name, class: "form-control"
+  .form-group
+    = f.label :email
+    = f.text_field :email, class: "form-control"
+  
+
+  - if can?(:assign_roles,@user)
+    %h3.section-header Admin
+
+    %h5 User Roles
+    .row
+      = f.collection_check_boxes :roles, User.allowed_roles.map{|r| [r,r.to_s.titleize]}, :first, :last do |b|
+        .col-md-2.col-sm-3
+          .checkbox
+            %label
+              = b.check_box
+              = b.label
+    %h5 Other
+    .checkbox
+      %label
+        = f.check_box :verified
+        Verified user, allowed to submit "spammy" fiddles.
+
+
+  = f.submit class: "btn btn-primary btn-lg btn-responsive"

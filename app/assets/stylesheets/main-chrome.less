@@ -15,9 +15,9 @@ body,html
   top: 0;
   left: 0;
   right: 0;
-  border-bottom: solid 1px darken( @page-header-bg, 5% );
-  background: @page-header-bg;
-  color: @page-header-text;
+  // border-bottom: solid 1px darken( @page-header-bg, 5% );
+  // background: @page-header-bg;
+  // color: @page-header-text;
   .box-shadow( 0 1px 2px rgba( 0, 0, 0, .15 ) );
 
   .navbar-right
@@ -32,10 +32,36 @@ body,html
 
   .navbar-brand
   {
-    color: darken( @page-header-bg, 15% );
-    text-shadow: 0 1px 0 #FFF;
+    color: darken( @navbar-inverse-bg, 10% );
+    text-shadow: 0 1px 0 lighten( @navbar-inverse-bg, 15% );
+
+    width: @asside-width + @grid-gutter-width / 2;
   }
+
+  .share-code
+  {
+    width: 200px;
+    background: darken( @navbar-inverse-bg, 8% );
+    border-color: darken( @btn-primary-border, 8% );
+    color: mix( @btn-primary-color, @navbar-inverse-bg );
+  }
+
+  .btn
+  {
+    .text-overflow;
+    max-width: 100px;
+  }
+
+  @media( max-width: 870px )
+  {
+    .share-code, .input-group
+    {
+      width: 100px;
+    }
+  }
+
 }
+
 
 .page-alerts
 {
@@ -60,9 +86,44 @@ body,html
   top: @page-header-height;
   padding: @grid-gutter-width / 2;
 
+  .page-title
+  {
+    max-width: 100%;
+    overflow: hidden;
+    margin-top: 0;
+  }
 }
 
 #main-content
 {
   padding: @grid-gutter-width / 2 @grid-gutter-width / 2  @grid-gutter-width / 2 @asside-width + @grid-gutter-width / 2 ;
+
+  .page-title
+  {
+    margin-top: 0;
+  }
+}
+
+@media( max-width: @screen-xs-max )
+{
+  #main-asside
+  {
+    position: static;
+    width: auto;
+  }
+
+  #main-content
+  {
+    padding: @grid-gutter-width / 2;
+  }
+
+
+
+  #page-header
+  {
+    .navbar-brand
+    {
+      width: auto;
+    }
+  }
 }

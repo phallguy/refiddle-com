@@ -13,4 +13,11 @@ class User < Rapped::User
   # @return [Integer] cache of the count of +refiddles+ owned by this user.
   field :refiddles_count, type: Integer
 
+  # @!attribute
+  # @return [Boolean] indicates if the user has been verified.
+  field :verified, type: Boolean, default: false
+    def verified=(val)
+      super val.to_bool
+    end
+
 end

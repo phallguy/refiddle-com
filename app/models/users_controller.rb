@@ -6,6 +6,9 @@ class UsersController < ApplicationController
     @users = paged(@users)
   end
 
+  def edit
+  end
+
   def show
   end
 
@@ -18,7 +21,14 @@ class UsersController < ApplicationController
 
 
     def user_params
-      params.fetch(:user,{}).permit(:name,:email)
+
+      allowed = [:name,:email]
+
+      if can?(:assign_roles,@user) || can?(:assign_roles,User)
+        allowed = [roles:[]]
+      end
+
+      params.fetch(:user,{}).permit(allowed)
     end
 
   
