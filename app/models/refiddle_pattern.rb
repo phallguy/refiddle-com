@@ -21,6 +21,12 @@ class RefiddlePattern
   # @return [String] the pattern to use when replacing matches from {#corpus_text} against {#regex}.
   field :replace_text, type: String
 
+  # @!group Scopes
+
+  scope :recent, -> { desc(:created_at) }
+  
+  # @!endgroup
+
   # Finds the differences between this pattern and the given pattern.
   # @param [RefiddlePattern] the other pattern to compare against.
   def diff(refiddle_pattern)

@@ -1,0 +1,101 @@
+.refiddle
+{
+  position: relative;
+  .refiddle-stats
+  {
+    float: right;
+
+    .stat
+    {
+      float: left;
+      padding: @padding-base-vertical @padding-base-horizontal;
+      background: @brand-info;
+      color: @brand-info-color;
+      border-radius: @border-radius-large;
+      text-align: center;
+      margin-left: @padding-base-horizontal;
+
+      .data-value
+      {
+        font-size: @font-size-h2;
+        margin: 0;
+      }
+
+      .data-label
+      {
+        font-weight: inherit;
+        margin: 0;
+      }
+    }
+  }
+
+  .refiddle-tags
+  {
+    margin: @padding-base-vertical 0;
+
+    li
+    {
+      padding: 0 2px;
+      &:first-child
+      {
+        padding-left: 0;
+      }
+    }
+  }
+
+  .refiddle-regex
+  {
+    font-size: @font-size-h4;
+    font-family: @font-family-monospace;
+  }
+
+  .refiddle-title
+  {
+    margin: 0;
+  }
+
+  .refiddle-corpus
+  {
+    margin: @padding-base-horizontal 0;
+  }
+}
+
+.alert
+{
+  border-left: 0;
+}
+
+.tag-cloud
+{
+  display: block;
+  list-style: none;
+  margin: 0 -3px;
+  padding: 0;
+
+  li
+  {
+    margin: 0 3px;
+    display: inline-block;
+  }
+}
+
+.diff
+{
+  > span
+  {
+    white-space: pre;
+  }
+}
+
+.diff-removed
+{
+  background: @state-danger-bg;
+  color: @state-danger-text;
+  text-decoration: line-through;
+}
+
+.diff-added
+{
+  background: @state-success-bg;
+  color: @state-success-text; 
+}

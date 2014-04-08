@@ -13,6 +13,7 @@ class RefiddlesController < ApplicationController
   end
 
   def show
+    @fork = params[:fork].to_bool
   end
 
   def create
@@ -32,10 +33,10 @@ class RefiddlesController < ApplicationController
       authorize! :update, @refiddle
     end
 
+    @refiddle.commit! unless params[:autosave].to_bool
     @refiddle.write_attributes refiddle_params
 
     render_modified_response @refiddle do
-      @refiddle.commit! unless params[:autosave].to_bool
     end
   end
 
@@ -48,7 +49,7 @@ class RefiddlesController < ApplicationController
 
     def refiddle_params
       params.fetch(:refiddle,{}).permit(
-        :title,:description,:share,:locked,:corpus_deliminator,:tags,
+        :title,:description,:share,:locked,:corpus_deliminator,:tags,:regex,:corpus_text,:replace_text,
         pattern_attributes: [:regex,:corpus_text,:replace_text]
         )
     end

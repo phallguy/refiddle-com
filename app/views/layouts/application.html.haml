@@ -5,12 +5,37 @@
     = render partial: "shared/head"
   %body
     #body-content      
-      .container.page-alerts
+      .page-alerts
         - flash.each do |name,msg|
-          .alert.slide{ class: "alert-#{name}" }= msg
+          .alert.slide.up{ class: "alert-#{name}" }= msg
       = yield(:pre_content)
-      = content_for?(:content) ? yield(:content) : yield
+      - if content_for?(:content)
+        = yield(:content)
+      -else
+        %section#main-content= yield
+        %asside#main-asside= yield :asside
       = yield(:post_content)
     #main-chrome
+      %nav#page-header.navbar.navbar-inverse.navbar-fixed-top
+        .navbar-header
+          %button.navbar-toggle{ data: { toggle: "collapse", target: "#page-nav-collapse" } }
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          = link_to "Refiddle", root_path, class: "navbar-brand"
+        #page-nav-collapse.collapse.navbar-collapse
+          #page-actions
+            = yield :page_actions
+          #page-nav-actions
+            - if content_for?(:page_nav_actions)
+              = yield :page_nav_actions
+            - else
+              %ul.list-inline.navbar-right
+                %li= link_to "Browse", tagged_index_path, class: "btn btn-default navbar-btn"
+                - if current_user
+                  %li= link_to current_user.name, profile_path(current_user), class: "btn btn-default navbar-btn"
+                - else
+                  %li= link_to "Sign In", signin_path, class: "btn btn-default navbar-btn"
+
 
     = render partial: "shared/scripts"

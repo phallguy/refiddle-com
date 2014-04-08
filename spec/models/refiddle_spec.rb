@@ -63,6 +63,17 @@ describe Refiddle do
       refiddle.pattern.should_not be_nil
     end
 
+    it "gets the last revison for current pattern" do
+      refiddle.commit!
+      refiddle.commit!
+      refiddle.reload.pattern.id.should == refiddle.revisions.last.id
+    end
+
+    it "reload does not create a new revision" do
+      refiddle.reload.pattern
+      refiddle.revisions.should have(1).revisions
+    end
+
     describe "#commit" do
       before(:each){ refiddle.commit! }
 

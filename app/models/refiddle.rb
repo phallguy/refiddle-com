@@ -18,6 +18,10 @@ class Refiddle
   # @return [String] the slug for the business listing. Unique only within a locality.
   slug :title
 
+  def display_name
+    title || id.to_s
+  end
+
   # @!attribute
   # @return [String] a description of the fiddle.
   field :description,   type: String
@@ -61,7 +65,7 @@ class Refiddle
 
     delegate :regex, :corpus_text, :replace_text, :regex=, :corpus_text=, :replace_text=, to: :pattern
     def pattern
-      @pattern ||= revisions.first || revisions.build
+      @pattern ||= revisions.last || revisions.build
     end
 
     def pattern=(val)
@@ -75,7 +79,7 @@ class Refiddle
 
   # @!attribute
   # @return [RefiddlePattern] the history of the pattern and it's tests.
-  embeds_many :revisions, class_name: "RefiddlePattern", inverse_of: :refiddle
+  embeds_many :revisions, class_name: "RefiddlePattern", inverse_of: :refiddle, cascade_callbacks: true
 
   # @!attribute
   # @return [Array<String>] array of tags on the fiddle.
@@ -106,7 +110,7 @@ class Refiddle
 
   # Commits the current {#pattern} to the {#revisions} for later browsing and recovery.
   def commit!
-    revisions << @pattern = pattern.dup
+    @pattern = revisions.create! regex: pattern.regex, corpus_text: pattern.corpus_text, replace_text: pattern.replace_text
   end
 
   # Reverts the {#pattern} to the most recently committed.
@@ -114,7 +118,7 @@ class Refiddle
   # @return [RefiddlePattern] the new current pattern.
   def rollback!(to=nil)
     revisions.pop
-    @pattern = revisions.first
+    @pattern = revisions.last
   end
 
   # Forks the current fiddle and creates a new one for the given user.

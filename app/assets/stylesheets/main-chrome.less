@@ -3,3 +3,66 @@ body,html
   min-height: 100%;
   height: 100%;
 }
+
+#body-content
+{
+  padding-top: @page-header-height;
+}
+
+#page-header
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-bottom: solid 1px darken( @page-header-bg, 5% );
+  background: @page-header-bg;
+  color: @page-header-text;
+  .box-shadow( 0 1px 2px rgba( 0, 0, 0, .15 ) );
+
+  .navbar-right
+  {
+    margin-right: @grid-gutter-width / 2;
+  }
+
+  ul
+  {
+    margin-bottom: 0;
+  }
+
+  .navbar-brand
+  {
+    color: darken( @page-header-bg, 15% );
+    text-shadow: 0 1px 0 #FFF;
+  }
+}
+
+.page-alerts
+{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: @zindex-navbar; 
+
+  .alert
+  {
+    margin: 0;
+  }
+}
+
+#main-asside
+{
+  width: @asside-width;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  top: @page-header-height;
+  padding: @grid-gutter-width / 2;
+
+}
+
+#main-content
+{
+  padding: @grid-gutter-width / 2 @grid-gutter-width / 2  @grid-gutter-width / 2 @asside-width + @grid-gutter-width / 2 ;
+}

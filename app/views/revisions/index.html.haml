@@ -1,0 +1,24 @@
+Current = #{@refiddle_patterns.first.id}
+Total = #{ @refiddle.revisions.size }
+%table.table
+  - @refiddle_patterns.each_with_index do |pattern,index|
+    %thead
+      %tr.active
+        %th{ colspan: 2 }
+          Updated at #{ relative_timestamp pattern.updated_at }
+    - if previous = @refiddle_patterns[index+1]
+      - diff = previous.diff( pattern )
+      %tr
+        %th Field
+        %th Diff
+      - diff.slice(:regex_ex,:corpus_text_ex,:replace_text_ex).each do |key,val|
+        %tr
+          %td= key.to_s.gsub(/_ex/,'').titleize
+          %td.diff!= val.map{|d| diff_tag(d)}.join("")
+    
+
+- content_for :asside do |e|
+  %h1.page-title= "#{@refiddle.display_name} Revisions"
+  %p Created #{ relative_timestamp @refiddle.created_at } by #{ @refiddle.user ? link_to( @refiddle.user.name, profile_path( @refiddle.user ) ) : "anonymous"}.
+  %p= link_to "Replay this Fiddle", @refiddle, class: "btn btn-default btn-block"
+  = paginate @refiddle_patterns

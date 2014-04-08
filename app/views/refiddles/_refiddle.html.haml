@@ -1,0 +1,21 @@
+.refiddle
+  .refiddle-stats
+    .stat
+      .data-value= refiddle.revisions.count
+      .data-label Revisions
+    .stat
+      .data-value= refiddle.forks_count
+      .data-label Forks
+
+  %h3.refiddle-title= link_to refiddle.display_name, refiddle
+  .refiddle-tags
+    %ul.list-inline
+      - refiddle.tags.each do |tag|
+        %li><
+          .label.label-default=tag
+  .refiddle-regex= refiddle.regex
+  .refiddle-description!= refiddle.description
+  .refiddle-corpus!= refiddle.corpus_text.gsub( /\n/, "<br />" )
+  .refiddle-actions
+    = link_to "Edit", refiddle_path(refiddle), class: "btn btn-default"
+    = link_to "Fork", refiddle_path(refiddle,fork: true), class: "btn btn-default"

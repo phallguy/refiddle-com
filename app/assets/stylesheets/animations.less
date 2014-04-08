@@ -3,8 +3,14 @@
   top: -5em;
   .opacity( 0 );
   .transition(~"top .25s, opacity .25s");
-  &.in {
+  &.in, &.up.in {
     top: 0;
     .opacity( 1 );
   }
+
+  &.up
+  {
+    top: 5em;
+  }
 }
+

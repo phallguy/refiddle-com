@@ -1,0 +1,7 @@
+%h1.page-title= title "Fiddles by #{@user.name}"
+
+%ul.list-unstyled
+  - @refiddles.each do |refiddle|
+    %li= render refiddle
+
+= paginate @refiddles

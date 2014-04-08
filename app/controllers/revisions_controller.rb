@@ -4,6 +4,8 @@ class RevisionsController < ApplicationController
 
   def index
     @refiddle_patterns = paged( @refiddle.revisions )
+      .recent
+      .cache
   end
 
   def show

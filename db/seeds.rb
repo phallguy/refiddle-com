@@ -8,3 +8,26 @@
 
 
 User.create( name: "Example" ) unless User.where( slug: "example" ).first
+
+example_user = User.find( "example" )
+
+unless test_sample = example_user.refiddles.where( slug: "red-green-corpus-text" ).first
+  example_user.refiddles.create! title: "Red Green Corpus Text", regex: "/m.* mouse/gi", corpus_text: <<-eos
+Corpus tests allow you to unit test your regular expressions using a typical red => green development flow.
+
+Test sections are marked indicating if the following lines should (#+) or should not (#-) match the regex pattern. Blank lines are ignored.    
+    
+#+ The following lines will be tested. If they match, they'll be hilighted in green, otherwise they'll be red
+mickey mouse.
+Mighty Mouse.
+
+#- Nothing below this line should match, if it does it'll show up red
+danger mouse
+
+#+ You can switch back to positive matching
+Miney mouse
+
+#- And back again. 
+Mikes mouse burgers <- Oops, shouldn't match but it does
+eos
+end
