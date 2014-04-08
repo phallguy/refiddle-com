@@ -17,6 +17,8 @@ RefiddleCom::Application.routes.draw do
 
   rapped_routes
 
+
+  get "/:id" => "refiddles#show", as: :short
   root to: "refiddles#new"
 
 end

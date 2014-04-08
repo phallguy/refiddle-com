@@ -1,5 +1,6 @@
 json.id refiddle.id.to_s
 json.url refiddle_url( refiddle )
+json.short_url short_url( refiddle.short_code )
 json.partial! "timestamps", model: refiddle
 json.(refiddle, :title, :description, :share, :locked, :short_code, :slug, :corpus_deliminator, :tags )
 json.pattern do

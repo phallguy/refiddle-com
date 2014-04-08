@@ -1,4 +1,5 @@
 class RefiddlesController < ApplicationController
+  before_filter :load_refiddle, only: :show
   skip_authorize_resource only: [:update]
   load_and_authorize_resource 
 
@@ -50,6 +51,10 @@ class RefiddlesController < ApplicationController
         :title,:description,:share,:locked,:corpus_deliminator,:tags,
         pattern_attributes: [:regex,:corus_text,:replace_text]
         )
+    end
+
+    def load_refiddle
+      @refiddle = Refiddle.any_of( { short_code: params[:id] }, { id: params[:id] } ).first
     end
 
 end

@@ -112,4 +112,5 @@ class Refiddle
       Sequence.next(Refiddle,initial:33000).to_s(36)
     end
 
+
 end
