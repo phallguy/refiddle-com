@@ -14,7 +14,7 @@ describe Refiddle do
     create(:refiddle).short_code.should_not be_empty
   end
 
-  it "doesn't use a blacklisted shortcode", :focus do
+  it "doesn't use a blacklisted shortcode" do
     Sequence.next( Refiddle, initial: "refiddles".to_i(36) - 3 )
     create(:refiddle).short_code.should_not == "refiddles"
     create(:refiddle).short_code.should_not == "refiddles"
@@ -25,6 +25,30 @@ describe Refiddle do
     it "creates a valid fiddle from the factory" do
       create(:refiddle).should be_valid
     end
+
+    it "requires an owner to lock" do
+      build(:refiddle, locked: true).should_not be_valid
+    end
+
+    [ "http://xheo.com", "redit.com", "file://c://aa", "https:/192.168.1.1", "<a href=\"image\">", "<link rel=custom>" ].each do |url|
+      %w{ corpus_text replace_text title description }.each do |field|
+        it "can't share urls like #{url} in #{field}" do
+          build(:refiddle, field => url, share: true ).should_not be_valid
+        end
+      end
+    end
+
+    %w{ corpus_text replace_text title description }.each do |field|
+      it "can share no urls in #{field}" do
+        build(:refiddle, field => "xheo dot. com", share: true ).should be_valid
+      end
+
+      it "can share ips in #{field}" do
+        build(:refiddle, field => "192.168.1.1", share: true ).should be_valid
+      end
+    end
+
+
   end
 
   describe "versions" do

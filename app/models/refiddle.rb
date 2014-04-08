@@ -4,13 +4,17 @@ class Refiddle
   include Mongoid::Slug
   include Mongoid::TagsArentHard
   include HasEnum
+  include HasHoneyPot
 
+
+  validate :no_urls_when_shared
+  honey_pot :email
 
   # @!attribute
   # @!return [String] title of the fiddle
   field :title,       type: String
 
-  # @!attribute
+  # @!attribute slug
   # @return [String] the slug for the business listing. Unique only within a locality.
   slug :title
 
@@ -42,6 +46,8 @@ class Refiddle
   # @!attribute
   # @return [Boolean] indicates if the fiddle is locked and cannot be edited by other users.
   field :locked,  type: Boolean, default: false
+    validate :locked_has_user
+
 
   # @!attribute
   # @return [String] a custom deliminator to use when marking corpus test sections. 
@@ -119,6 +125,31 @@ class Refiddle
   end
 
   private 
+
+    URL_PATTERN = /\w+\.[a-z]{2,}/i
+    PROTOCOL_PATTERN = /[a-z]+:\/\/?\w+/i
+    LINK_PATTERN = /href|src|rel=/i
+
+    def validate_no_url(field)
+      val = send(field)
+      errors.add field, "may not include url or link like text when shared" if PROTOCOL_PATTERN =~ val || URL_PATTERN =~ val || LINK_PATTERN =~ val
+    end
+
+    def no_urls_when_shared
+      if share
+        %w{ title description corpus_text replace_text }.each do |field|
+          validate_no_url(field)
+        end
+      end
+
+      true
+    end
+
+    def locked_has_user
+
+      errors.add :locked, "must be signed in to create a private fiddle" unless !locked || user
+    end
+
     def create_short_code
       code = nil
       loop do
