@@ -16,7 +16,15 @@ class UsersController < ApplicationController
   end
 
   def update
+
   end
+
+  private
+
+
+    def user_params
+      params.fetch(:user,{}).permit(:name,:email)
+    end
 
   
 end

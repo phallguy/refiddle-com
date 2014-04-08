@@ -33,6 +33,7 @@ class Ability < Rapped::Ability
   def anonymous
     can [:read,:new,:create,:fork], Refiddle, share: true
     can [:update], Refiddle, locked: false
+    can [:read], User
   end
 
   def staff

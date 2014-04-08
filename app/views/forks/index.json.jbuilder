@@ -1,4 +1,1 @@
-json.pagination json_paginate(@forks)
-json.collection @forks do |fork|
-  json.partial! fork
-end
+json.partial! "shared/paged_collection", collection: @forks
