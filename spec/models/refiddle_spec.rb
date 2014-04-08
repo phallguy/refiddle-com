@@ -14,6 +14,13 @@ describe Refiddle do
     create(:refiddle).short_code.should_not be_empty
   end
 
+  it "doesn't use a blacklisted shortcode", :focus do
+    Sequence.next( Refiddle, initial: "refiddles".to_i(36) - 3 )
+    create(:refiddle).short_code.should_not == "refiddles"
+    create(:refiddle).short_code.should_not == "refiddles"
+    create(:refiddle).short_code.should_not == "refiddles"
+  end
+
   describe "validations" do
     it "creates a valid fiddle from the factory" do
       create(:refiddle).should be_valid

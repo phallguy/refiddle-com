@@ -26,6 +26,8 @@ class Refiddle
     }
     index( { short_code: 1 }, { unique: true, sparse: true } )
 
+    SHORT_CODE_BLACKLIST = %w{ by tagged refiddles sessions users stackoverflow regex auth masquerade signin signout }
+
   # @!attribute flavor
   # @return [String] the flavor of regex.
   enum( { "J" => "JavaScript", "R" => "Ruby", "N" => ".NET" }, field: :flavor )
@@ -118,7 +120,12 @@ class Refiddle
 
   private 
     def create_short_code
-      Sequence.next(Refiddle,initial:33000).to_s(36)
+      code = nil
+      loop do
+        code = Sequence.next(Refiddle,initial:33000).to_s(36)
+        break unless SHORT_CODE_BLACKLIST.include?(code)
+      end 
+      code
     end
 
 
