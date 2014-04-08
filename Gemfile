@@ -25,7 +25,7 @@ gem 'haml'
 gem 'kaminari'
 gem 'cancan'
 gem 'dalli'
-
+gem 'diff-lcs'
 
 group :development, :test do
   gem 'awesome_print', :require => false

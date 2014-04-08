@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'stack_overflow_service'
 
-describe StackOverflowService, :focus, vcr: { record: :new_episodes } do
+describe StackOverflowService, vcr: { record: :new_episodes } do
   let(:service){ StackOverflowService.new }
   let(:results){ service.fetch_questions("regex") }
   let(:question){ service.fetch_question( results[:questions].first[:question_id] ) }

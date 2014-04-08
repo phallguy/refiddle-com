@@ -49,7 +49,7 @@ class RefiddlesController < ApplicationController
     def refiddle_params
       params.fetch(:refiddle,{}).permit(
         :title,:description,:share,:locked,:corpus_deliminator,:tags,
-        pattern_attributes: [:regex,:corus_text,:replace_text]
+        pattern_attributes: [:regex,:corpus_text,:replace_text]
         )
     end
 

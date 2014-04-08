@@ -47,13 +47,22 @@ class Refiddle
 
   # @!attribute
   # @return [RefiddlePattern] the current published pattern.
-  embeds_one :pattern, class_name: "RefiddlePattern", inverse_of: :refiddle
-    accepts_nested_attributes_for :pattern
+  # embeds_one :pattern, class_name: "RefiddlePattern", inverse_of: :refiddle
+    # accepts_nested_attributes_for :pattern
     validates_presence_of :pattern
 
-    delegate :regex, :corpus_text, :replace_text, :regex=, :corpus_text=, :replace_text=, to: :_pattern
-    def _pattern
-      pattern || self.pattern = RefiddlePattern.new
+    delegate :regex, :corpus_text, :replace_text, :regex=, :corpus_text=, :replace_text=, to: :pattern
+    def pattern
+      @pattern ||= revisions.first || revisions.build
+    end
+
+    def pattern=(val)
+      val = val.attributes if RefiddlePattern === val
+      pattern.write_attributes((val || {}).to_hash)
+    end
+
+    def pattern_attributes=(val)
+      self.pattern = val
     end
 
   # @!attribute
@@ -89,15 +98,15 @@ class Refiddle
 
   # Commits the current {#pattern} to the {#revisions} for later browsing and recovery.
   def commit!
-    revision = pattern.dup
-    revisions << revision
+    revisions << @pattern = pattern.dup
   end
 
   # Reverts the {#pattern} to the most recently committed.
   # @param [RefiddlePattern] to the pattern or id to revert to.
   # @return [RefiddlePattern] the new current pattern.
   def rollback!(to=nil)
-    update_attribute :pattern, revisions.pop || build_pattern
+    revisions.pop
+    @pattern = revisions.first
   end
 
   # Forks the current fiddle and creates a new one for the given user.

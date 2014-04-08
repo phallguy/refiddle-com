@@ -36,7 +36,11 @@ describe Refiddle do
       before(:each){ refiddle.commit! }
 
       it "creates a revision" do
-        refiddle.revisions.should have(1).revision
+        refiddle.revisions.should have(2).revisions
+      end
+
+      it "updates the pattern attribute to new top revision" do
+        refiddle.pattern.should == refiddle.revisions.last
       end
 
       it "copies the pattern" do
@@ -47,6 +51,14 @@ describe Refiddle do
 
       it "de-references refiddle" do
         refiddle.revisions.first.refiddle.should == refiddle
+      end
+
+      it "only creates one revision" do
+        refiddle.write_attributes( { pattern_attributes: { corpus_text: "Changed" } } )
+        refiddle.save!
+        refiddle.commit!
+
+        refiddle.revisions.should have(3).revisions
       end
 
     end
@@ -63,7 +75,7 @@ describe Refiddle do
       end
 
       it "removes the top revision" do
-        refiddle.revisions.should be_empty
+        refiddle.revisions.should have(1).revision
       end
 
       it "restores the pattern" do
@@ -78,6 +90,11 @@ describe Refiddle do
         refiddle.pattern.corpus_text.should   be_nil
         refiddle.pattern.replace_text.should  be_nil
       end
+
+      it "stays gone" do
+        refiddle.reload
+        refiddle.revisions.should have(1).revision
+      end
     end
 
     describe "#fork" do
@@ -90,7 +107,7 @@ describe Refiddle do
       end
 
       it "does not copy the revision history" do
-        fork.revisions.should be_empty
+        fork.revisions.should have(1).revision
       end
 
       it "knows where it was forked from" do

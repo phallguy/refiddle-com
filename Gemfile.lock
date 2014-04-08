@@ -380,6 +380,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   dalli
   database_cleaner
+  diff-lcs
   factory_girl_rails
   fakeweb
   foreman
