@@ -11,10 +11,10 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'therubyracer', platforms: :ruby
 gem 'jbuilder', '~> 1.2'
-gem 'cancan'
 gem 'omniauth-openid'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem 'omniauth-stackexchange'
 gem "non-stupid-digest-assets"
 gem 'mongoid', github: 'mongoid/mongoid' 
 gem 'moped', github: 'mongoid/moped' 
@@ -23,6 +23,7 @@ gem 'mongoid-tags-arent-hard'
 gem 'rails_config'
 gem 'haml'
 gem 'kaminari'
+gem 'cancan'
 
 group :development, :test do
   gem 'awesome_print', :require => false

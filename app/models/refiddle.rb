@@ -78,6 +78,14 @@ class Refiddle
   belongs_to :forked_from, class_name: "Refiddle", inverse_of: :forks
 
 
+  # @!group Scopes
+
+  scope :shared, ->(){ where( share: true ) }
+  scope :recent, ->(){ desc( :created_at ) }
+
+  # @!endgroup
+
+
   # Commits the current {#pattern} to the {#revisions} for later browsing and recovery.
   def commit!
     revision = pattern.dup

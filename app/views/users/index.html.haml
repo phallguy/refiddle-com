@@ -1,0 +1,8 @@
+- title "Users"
+
+%table.table
+  %tr
+    %th User
+  - @users.each do |user|
+    %tr
+      %td= link_to user.name, user

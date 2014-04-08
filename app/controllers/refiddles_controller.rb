@@ -10,6 +10,7 @@ class RefiddlesController < ApplicationController
   end
 
   def create
+    @refiddle.user = current_user
     render_modified_response @refiddle
   end
 

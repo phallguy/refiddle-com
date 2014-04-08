@@ -9,6 +9,9 @@ RefiddleCom::Application.routes.draw do
     end
   end
 
+  resources :tagged, only: [:index,:show], path: "tagged"
+  resources :users
+
   post "regex/replace/:flavor" => "play#replace", as: :regex_replace
   post "regex/evaluate/:flavor" => "play#evaluate", as: :regex_evaluate
 
