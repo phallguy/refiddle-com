@@ -8,12 +8,14 @@ class Flavors.JavaScript
         failed: 0
         passed: 0
         total: 0
-        tests: false
+        tests: @isCorpusTest( corpus )
 
     unless regex = @makeRegex( pattern )
       return matches
 
-    unless matches.matchSummary.tests
+    if matches.matchSummary.tests
+      @matchTests( regex, corpus, matches )
+    else
       @matchWholeCorpus( regex, corpus, matches )
 
     matches
@@ -44,7 +46,65 @@ class Flavors.JavaScript
 
       break if regex.lastIndex >= corpus.length
 
+  matchTests: (regex,corpus,matches) ->
+    nonMatcher        = new Matcher( regex, matches )
+    positiveMatcher   = new PositiveMatcher( regex, matches )
+    negativeMatcher   = new NegativeMatcher( regex, matches )
+
+    selectMatchType = (line ) ->
+      switch line.charAt(1)
+        when '+' then positiveMatcher
+        when '-' then negativeMatcher
+        when '#' then nonMatcher
+
+    lines   = corpus.split "\n"
+    matcher = nonMatcher
+    offset  = 0
+
+    for line in lines
+      regex.lastIndex = 0
+
+      if line.charAt(0) == '#'
+        matcher = selectMatchType(line)
+      else
+        matcher.match( line, offset ) if line.length
+
+      offset += line.length + 1
+
+    undefined
+
+  isCorpusTest: (corpus) ->
+    /^#(\+|\-)/gm.test( corpus )
+
+class Matcher
+  constructor: (regex, matches ) ->
+    @regex = regex
+    @matches = matches
+
+  match: (line,offset) ->
+
+  pass: ( offset, line ) ->
+    @matches.matchSummary.passed++
+    @matches.matchSummary.total++
+    @matches[offset.toString()] = [ offset, line.length ]
+
+  fail: ( offset, line ) ->
+    @matches.matchSummary.failed++
+    @matches.matchSummary.total++
+    @matches[offset.toString()] = [ offset, line.length, 'match-fail' ]
 
 
+class PositiveMatcher extends Matcher
+  match: (line,offset) ->
+    if match = @regex.exec( line )
+      @pass( offset, line )
+    else
+      @fail( offset, line )
 
-    
+class NegativeMatcher extends Matcher
+  match: (line,offset) ->
+    if match = @regex.exec( line )
+      @fail( offset, line )
+    else
+      @pass( offset, line )
+

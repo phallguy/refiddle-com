@@ -86,7 +86,7 @@ class App.Views.Refiddle extends Backbone.View
       from  = @corpusEditor.doc.posFromIndex( pair[0] )
       to    = @corpusEditor.doc.posFromIndex( pair[0] + pair[1] )
 
-      @corpusEditor.markText( from, to, className: "match" )
+      @corpusEditor.markText( from, to, className: pair[2] || "match" )
     undefined
 
 

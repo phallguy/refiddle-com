@@ -1,8 +1,8 @@
 (function() {
-  var _ref,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var Matcher, NegativeMatcher, PositiveMatcher, _ref, _ref1, _ref2,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   window.Flavors || (window.Flavors = {});
 
@@ -16,13 +16,15 @@
           failed: 0,
           passed: 0,
           total: 0,
-          tests: false
+          tests: this.isCorpusTest(corpus)
         }
       };
       if (!(regex = this.makeRegex(pattern))) {
         return matches;
       }
-      if (!matches.matchSummary.tests) {
+      if (matches.matchSummary.tests) {
+        this.matchTests(regex, corpus, matches);
+      } else {
         this.matchWholeCorpus(regex, corpus, matches);
       }
       return matches;
@@ -59,9 +61,112 @@
       }
     };
 
+    JavaScript.prototype.matchTests = function(regex, corpus, matches) {
+      var line, lines, matcher, negativeMatcher, nonMatcher, offset, positiveMatcher, selectMatchType, _i, _len;
+      nonMatcher = new Matcher(regex, matches);
+      positiveMatcher = new PositiveMatcher(regex, matches);
+      negativeMatcher = new NegativeMatcher(regex, matches);
+      selectMatchType = function(line) {
+        switch (line.charAt(1)) {
+          case '+':
+            return positiveMatcher;
+          case '-':
+            return negativeMatcher;
+          case '#':
+            return nonMatcher;
+        }
+      };
+      lines = corpus.split("\n");
+      matcher = nonMatcher;
+      offset = 0;
+      for (_i = 0, _len = lines.length; _i < _len; _i++) {
+        line = lines[_i];
+        regex.lastIndex = 0;
+        if (line.charAt(0) === '#') {
+          matcher = selectMatchType(line);
+        } else {
+          if (line.length) {
+            matcher.match(line, offset);
+          }
+        }
+        offset += line.length + 1;
+      }
+      return void 0;
+    };
+
+    JavaScript.prototype.isCorpusTest = function(corpus) {
+      return /^#(\+|\-)/gm.test(corpus);
+    };
+
     return JavaScript;
 
   })();
+
+  Matcher = (function() {
+    function Matcher(regex, matches) {
+      this.regex = regex;
+      this.matches = matches;
+    }
+
+    Matcher.prototype.match = function(line, offset) {};
+
+    Matcher.prototype.pass = function(offset, line) {
+      this.matches.matchSummary.passed++;
+      this.matches.matchSummary.total++;
+      return this.matches[offset.toString()] = [offset, line.length];
+    };
+
+    Matcher.prototype.fail = function(offset, line) {
+      this.matches.matchSummary.failed++;
+      this.matches.matchSummary.total++;
+      return this.matches[offset.toString()] = [offset, line.length, 'match-fail'];
+    };
+
+    return Matcher;
+
+  })();
+
+  PositiveMatcher = (function(_super) {
+    __extends(PositiveMatcher, _super);
+
+    function PositiveMatcher() {
+      _ref = PositiveMatcher.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    PositiveMatcher.prototype.match = function(line, offset) {
+      var match;
+      if (match = this.regex.exec(line)) {
+        return this.pass(offset, line);
+      } else {
+        return this.fail(offset, line);
+      }
+    };
+
+    return PositiveMatcher;
+
+  })(Matcher);
+
+  NegativeMatcher = (function(_super) {
+    __extends(NegativeMatcher, _super);
+
+    function NegativeMatcher() {
+      _ref1 = NegativeMatcher.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    NegativeMatcher.prototype.match = function(line, offset) {
+      var match;
+      if (match = this.regex.exec(line)) {
+        return this.fail(offset, line);
+      } else {
+        return this.pass(offset, line);
+      }
+    };
+
+    return NegativeMatcher;
+
+  })(Matcher);
 
   $(function() {
     var alerts, hideAlerts, slides;
@@ -103,8 +208,8 @@
       this.resizeTextGroup = __bind(this.resizeTextGroup, this);
       this.highlightMatches = __bind(this.highlightMatches, this);
       this.updateMatches = __bind(this.updateMatches, this);
-      _ref = Refiddle.__super__.constructor.apply(this, arguments);
-      return _ref;
+      _ref2 = Refiddle.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     Refiddle.prototype.literalRegex = /^\/[^\/]+\/\w*/m;
@@ -194,7 +299,7 @@
         from = this.corpusEditor.doc.posFromIndex(pair[0]);
         to = this.corpusEditor.doc.posFromIndex(pair[0] + pair[1]);
         this.corpusEditor.markText(from, to, {
-          className: "match"
+          className: pair[2] || "match"
         });
       }
       return void 0;
