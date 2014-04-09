@@ -1,0 +1,29 @@
+.checkbox
+  %label
+    %small /g
+    = check_box_tag :g
+    Match all occurences
+.checkbox
+  %label
+    %small /i
+    = check_box_tag :i
+    Ignore case
+
+.checkbox
+  %label
+    %small /m
+    = check_box_tag :m
+    <code>.</code> matches new lines
+
+.checkbox
+  %label
+    %small /x
+    = check_box_tag :x
+    Ignore pattern whitespace
+
+.checkbox
+  %label
+    %small /o
+    = check_box_tag :o
+    Evaluate <code>\#{}</code> only once
+

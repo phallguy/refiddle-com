@@ -15,13 +15,9 @@ class ForksController < ApplicationController
 
 
   private
-     def fork_params
-      params.fetch(:refiddle,{}).permit(
-        :title,:description,:share,:locked,:corpus_deliminator,:tags, :regex, :corpus_text, :replace_text,
-        pattern_attributes: [:regex,:corpus_text,:replace_text]
-        ).tap do |wl|
-        wl[:user] = current_user
-      end
+    include HasRefiddleParams
+    def fork_params
+      refiddle_params
     end
 
 

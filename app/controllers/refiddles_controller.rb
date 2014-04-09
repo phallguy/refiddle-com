@@ -50,12 +50,7 @@ class RefiddlesController < ApplicationController
 
   private 
 
-    def refiddle_params
-      params.fetch(:refiddle,{}).permit(
-        :title,:description,:share,:locked,:corpus_deliminator,:tags,:regex,:corpus_text,:replace_text,
-        pattern_attributes: [:regex,:corpus_text,:replace_text]
-        )
-    end
+    include HasRefiddleParams
 
     def load_refiddle
       @refiddle = Refiddle.any_of( { short_code: params[:id] }, { id: params[:id] } ).first

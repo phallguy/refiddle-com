@@ -67,9 +67,11 @@ body,html
 {
   color: mix( @body-bg, @text-color, 75% );
   display: block;
-  margin: 0 0 16px 0;
+  margin: 0 0 24px 0;
   font-size: @font-size-h4;
   text-shadow: 0 1px #FFF;
+  z-index: 20;
+  position: relative;
 
   @media( max-width: @screen-xs-max )
   {
@@ -115,13 +117,15 @@ body,html
 
 #main-asside
 {
+  @asside-bg: darken( @body-bg, 5% );
+
   width: @asside-width;
   position: fixed;
   left: 0;
   bottom: 0;
   top: 0;
-  padding: @grid-gutter-width / 2;
-  background: darken( @body-bg, 5% );
+  padding: @grid-gutter-width / 2 @grid-gutter-width / 2 @grid-gutter-width * 2;
+  background: @asside-bg;
   .box-shadow( inset -1px 0 3px rgba( 0, 0, 0, .075 ) );
   border-right: solid 1px darken( @body-bg, 15% );
   overflow: auto;
@@ -133,6 +137,25 @@ body,html
     margin-top: 0;
   }
 
+  &:after, &:before
+  {
+    content: " ";
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: @asside-width;
+    height: @grid-gutter-width * 2;
+    #gradient.vertical( transparent, @asside-bg );
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &:before
+  {
+    top: 0;
+    bottom: auto;
+    #gradient.vertical( @asside-bg, transparent );
+  }
 }
 
 #main-content

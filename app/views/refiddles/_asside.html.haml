@@ -4,6 +4,16 @@
     #regex-options.panel-collapse.collapse.in
       .panel-body
         .form-group
+          .form-control-select
+            = f.select :flavor, options_from_collection_for_select( Refiddle::FLAVORS, :first, :last, refiddle.flavor ), {}, class: "form-control"
+
+        .flavor-options
+          - Refiddle::FLAVORS.values.each do |flavor|
+            %div{ class: "flavor-#{flavor.parameterize}-options" }
+              = render "refiddles/flavors/#{flavor.parameterize.underscore}"
+        
+
+        .form-group
           = f.text_field :tags, class: "form-control", placeholder: "Tags..."
         .form-group
           = f.text_field :title, class: "form-control", placeholder: "Title...."
@@ -44,11 +54,9 @@
 
   .panel.panel-default
     .panel-heading
-      .badge.pull-right 0
       = link_to "Corpus Tests", "#tests", data: { toggle: "collapse", parent: "#options" }
     #tests.panel-collapse.collapse
       .panel-body
-        .match-results
         %p Corpus tests allow you to unit test your regular expressions using a typical red => green development flow.
         %pre
           \/m.* mouse/gi

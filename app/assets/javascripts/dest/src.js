@@ -1,4 +1,8 @@
 (function() {
+  var _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
   $(function() {
     var alerts, hideAlerts, slides;
     $("a[href=\"" + location.hash + "\"][data-toggle=tab]").tab('show');
@@ -31,5 +35,53 @@
     };
     return hideAlerts();
   });
+
+  App.Views.Refiddle = (function(_super) {
+    __extends(Refiddle, _super);
+
+    function Refiddle() {
+      _ref = Refiddle.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Refiddle.prototype.events = {
+      "click .save": function(e) {
+        e.preventDefault();
+        return this.form.submit();
+      }
+    };
+
+    Refiddle.prototype.initialize = function(options) {
+      var _this = this;
+      if (options == null) {
+        options = {};
+      }
+      Refiddle.__super__.initialize.apply(this, arguments);
+      this.form = $("#refiddle-form");
+      this.textGroup = $("#text");
+      this.corpusText = $("#refiddle_corpus_text");
+      this.replaceText = $("#refiddle_replace_text");
+      this.replaceResults = $("#replace_results");
+      this.headerHeight = this.textGroup.find(".panel-heading").outerHeight();
+      this.resizeTextGroup();
+      return $(window).on("resize", function() {
+        return _this.resizeTextGroup();
+      });
+    };
+
+    Refiddle.prototype.resizeTextGroup = function() {
+      var availableHeight;
+      availableHeight = $(window).height() - this.textGroup.offset().top - 15;
+      this.corpusText.css({
+        height: availableHeight - this.headerHeight * 2 - 5 - 5
+      });
+      return this.replaceResults.css({
+        height: availableHeight - this.replaceText.outerHeight() - this.headerHeight * 2 - 5 - 5
+      });
+    };
+
+    return Refiddle;
+
+  })(Backbone.View);
 
 }).call(this);

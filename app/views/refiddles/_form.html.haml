@@ -5,18 +5,37 @@
   - when refiddle.new_record then { url: original ? refiddle_forks_path( original ) : refiddles_path, method: :post }
   - else { url: refiddle_path(refiddle), method: :put }
 - content_for :content do
-  = form_for refiddle, options do |f|
+  = form_for refiddle, options.merge( html: { id: "refiddle-form", class: "flavor-#{refiddle.flavor_name.parameterize}" } ) do |f|
     = f.honey_pot
 
     #main-content
       = render "error_list", model: refiddle
       .form-group
         = f.text_field :regex, class: "form-control"
-      .form-group
-        = f.text_area :corpus_text, class: "form-control", rows: 6
-      .form-group
-        = f.text_field :replace_text, class: "form-control"
-      = f.submit class: "btn btn-primary"
+      #text.panel-group        
+        .panel.panel-default><
+          .panel-heading
+            .pull-right
+              .label.label-default 0 Matches
+              .label.label-success 1 PASSING
+              .label.label-danger 2 FAILING
+            = link_to "Corpus", "#corpus", data: { toggle: "collapse", parent: "#text" }
+
+          #corpus.panel-collapse.collapse
+            .panel-body
+              = f.text_area :corpus_text, class: "form-control", rows: 6
+
+        .panel.panel-default><
+          .panel-heading= link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
+          #replace.panel-collapse.collapse.in
+            .panel-body
+              .form-group
+                = f.text_field :replace_text, class: "form-control"
+              .form-group
+                = text_area_tag :replace_results, nil, class: "form-control", rowS: 6
+
+
+      = f.submit class: "btn btn-primary hide"
 
 
 
@@ -45,10 +64,9 @@
           Fork
   - unless refiddle.new_record?
     .input-group.navbar-left.navbar-btn.share-group
+      .input-group-addon
+        = icon :share_square_o, :fw
       %input.form-control.share-code{ type: "text", value: short_url(refiddle.short_code)}
-      .input-group-btn
-        = link_to "#share", class: "btn btn-default" do
-          .visible-sm.visible-xs= icon :share, :fw
-          .hidden-sm.hidden-xs
-            = icon :share, :fw
-            Share
+- content_for :scripts do
+  :coffee
+    new App.Views.Refiddle( el: document )
