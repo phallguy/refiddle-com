@@ -27,7 +27,7 @@
 
         .panel.panel-default><
           .panel-heading= link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
-          #replace.panel-collapse.collapse
+          #replace.panel-collapse.collapse.in
             .panel-body
               .form-group
                 = f.text_field :replace_text, class: "form-control"
