@@ -187,6 +187,11 @@ body,html
     border-right: 0;
     border-top: solid 1px darken( @body-bg, 15% );
     .box-shadow( inset 0 1px 3px rgba( 0, 0, 0, .075 ) );
+
+    &:before, &:after
+    {
+      display: none;
+    }
   }
 
   #main-content

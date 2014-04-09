@@ -71,13 +71,22 @@
 
     Refiddle.prototype.resizeTextGroup = function() {
       var availableHeight;
-      availableHeight = $(window).height() - this.textGroup.offset().top - 15;
-      this.corpusText.css({
-        height: availableHeight - this.headerHeight * 2 - 5 - 5
-      });
-      return this.replaceResults.css({
-        height: availableHeight - this.replaceText.outerHeight() - this.headerHeight * 2 - 5 - 5
-      });
+      if ($(window).width() >= 768) {
+        availableHeight = $(window).height() - this.textGroup.offset().top - 15;
+        this.corpusText.css({
+          height: availableHeight - this.headerHeight * 2 - 5 - 5
+        });
+        return this.replaceResults.css({
+          height: availableHeight - this.replaceText.outerHeight() - this.headerHeight * 2 - 5 - 5
+        });
+      } else {
+        this.corpusText.css({
+          height: ""
+        });
+        return this.replaceResults.css({
+          height: ""
+        });
+      }
     };
 
     return Refiddle;

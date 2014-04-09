@@ -20,7 +20,11 @@ class App.Views.Refiddle extends Backbone.View
 
 
   resizeTextGroup: ->
-    availableHeight = $(window).height() - @textGroup.offset().top - 15 # grid gutter
+    if $(window).width() >= 768
+      availableHeight = $(window).height() - @textGroup.offset().top - 15 # grid gutter
 
-    @corpusText.css( height: availableHeight - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
-    @replaceResults.css( height: availableHeight - @replaceText.outerHeight() - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
+      @corpusText.css( height: availableHeight - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
+      @replaceResults.css( height: availableHeight - @replaceText.outerHeight() - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
+    else
+      @corpusText.css( height: "" )
+      @replaceResults.css( height: "" )
