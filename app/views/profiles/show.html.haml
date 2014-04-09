@@ -13,3 +13,6 @@
 
   - if @user == current_user
     = link_to "Sign Out", signout_path, class: "btn btn-danger btn-block"
+
+  - if can?(:index,User)
+    = link_to "All Users", users_path, class: "btn btn-default btn-block"

@@ -1,0 +1,18 @@
+%h1.page-title= title "Active Questions on StackOverflow.com"
+- if @recent[:error]
+  .alert.alert-danger
+    = @recent[:error].message
+    %pre= @recent[:error].backtrace
+- if @recent[:downloading]
+  .alert.alert-info The latest updates are currently being downloaded. Check back shortly for an update.
+
+%ul.list-unstyled
+  - @questions.each do |question|
+    %li
+      = render "question", question: question
+      %hr
+
+= paginate @questions
+
+- content_for :asside do
+  = render "about"

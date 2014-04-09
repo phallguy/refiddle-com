@@ -17,7 +17,7 @@ class StackOverflowService
 
     question[:answers].each do |a|
       related_fiddles += find_related_fiddles( a[:body] ) || []
-    end
+    end if question[:answers]
     
     related_fiddles.uniq!
     
@@ -29,7 +29,11 @@ class StackOverflowService
   private 
 
     def find_related_fiddles( text )
-      text.scan( /https?:\/\/refiddle\.com\/(\w+)/ )
+      text.scan( /https?:\/\/refiddle\.com\/(\w+)/ ).map do |short_code|
+        short_code = short_code.first
+        existing = Refiddle.where( short_code: short_code ).first
+        [short_code,existing.try(:display_name)||short_code]
+      end
     end
 
 end

@@ -11,7 +11,8 @@
         %th Diff
       - diff.slice(:regex_ex,:corpus_text_ex,:replace_text_ex).each do |key,val|
         %tr
-          %td= key.to_s.gsub(/_ex/,'').titleize
+          %td
+            %nobr= key.to_s.gsub(/_ex/,'').titleize
           %td.diff!= val.map{|d| diff_tag(d)}.join("")
     
 

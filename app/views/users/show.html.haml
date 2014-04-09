@@ -1,4 +1,7 @@
 %h1.page-title= title @user.name
+
+= link_to "Browse Fiddles", profile_path( @user )
+
 .data-label Email
 .data-value= @user.email
 .data-label Provider
@@ -10,5 +13,7 @@
 
 - content_for :asside do
   = link_to "Edit Profile", edit_user_path(@user), class: "btn btn-default btn-block"
+  - if can?(:masquerade,@user)
+    = link_to "Masquerade", masquerade_path(@user), class: "btn btn-default btn-block"
   - if can?(:index,User)
     = link_to "All Users", users_path, class: "btn btn-default btn-block"

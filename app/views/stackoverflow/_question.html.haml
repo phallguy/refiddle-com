@@ -1,0 +1,13 @@
+.stackoverflow-question
+  - no_title ||= false
+  - unless no_title
+    %h3= link_to question[:title], show_stackoverflow_url( question[:question_id], title: question[:title].parameterize )
+  %p
+    - question[:tags].each do |tag|
+      %span.label.label-inverse= tag
+  != question[:body]
+  -if question[:related_fiddles].present?
+    %h4 Related Refiddles
+    %ul
+      - question[:related_fiddles].each do |related|
+        %li= link_to related.last, short_url( related.first )

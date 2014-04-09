@@ -80,6 +80,13 @@ class Refiddle
       self.pattern = val
     end
 
+    def pattern_will_change?(params)
+      params = params.symbolize_keys
+      %i{ regex corpus_text replace_text }.any? do |field|
+        params[field] != send(field)
+      end
+    end
+
   # @!attribute
   # @return [RefiddlePattern] the history of the pattern and it's tests.
   embeds_many :revisions, class_name: "RefiddlePattern", inverse_of: :refiddle, cascade_callbacks: true

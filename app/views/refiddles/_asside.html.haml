@@ -1,0 +1,118 @@
+#options.panel-group
+  .panel.panel-default
+    .panel-heading= link_to "Regex Options", "#regex-options", data: { toggle: "collapse", parent: "#options" }
+    #regex-options.panel-collapse.collapse.in
+      .panel-body
+        .form-group
+          = f.text_field :tags, class: "form-control", placeholder: "Tags..."
+        .form-group
+          = f.text_field :title, class: "form-control", placeholder: "Title...."
+        .form-group
+          = f.text_area :description, class: "form-control", placeholder: "Description...", rows: 5
+
+        .checkbox
+          %label
+            = f.check_box :locked
+            Only I can edit this refiddle
+
+        .checkbox
+          %label
+            = f.check_box :share
+            Share with other refiddle.com users
+            .help-block
+              Shared fiddles are licensed under a #{ link_to "Creative Commons Attribution 3.0 Unported License", "http://creativecommons.org/licenses/by/3.0/", target: "_blank" }.
+
+  - unless refiddle.new_record?
+    .panel.panel-default
+      .panel-heading= link_to "History", "#history", data: { toggle: "collapse", parent: "#options" }
+      #history.panel-collapse.collapse
+        .panel-body
+          .data-label Created
+          .data-value
+            = relative_timestamp refiddle.created_at
+            by
+            = refiddle.user ? link_to( refiddle.user.name, profile_path(refiddle.user) ) : "anonymous"
+          .data-label Last Updated
+          .data-value
+            = relative_timestamp refiddle.updated_at
+            
+          - if refiddle.forked_from
+            .data-label Forked From
+            .data-value.text-overflow= link_to refiddle.forked_from.display_name, refiddle.forked_from
+          .data-label Revisions
+          .data-value= link_to refiddle.revisions.count, refiddle_revisions_path(refiddle)
+
+  .panel.panel-default
+    .panel-heading
+      .badge.pull-right 0
+      = link_to "Corpus Tests", "#tests", data: { toggle: "collapse", parent: "#options" }
+    #tests.panel-collapse.collapse
+      .panel-body
+        .match-results
+        %p Corpus tests allow you to unit test your regular expressions using a typical red => green development flow.
+        %pre
+          \/m.* mouse/gi
+        %pre
+          \#+ Match these
+          mickey mouse
+          Mighty Mouse
+
+          \#- Don't match these
+          danger mouse
+        = link_to "Try it", refiddle_path( "red-green-corpus-test" ), class: "btn btn-default"
+
+
+  .panel.panel-default
+    .panel-heading= link_to "Ask on StackOverflow", "#stackoverflow", data: { toggle: "collapse", parent: "#options" }
+    #stackoverflow.panel-collapse.collapse
+      .panel-body
+        %p Need help with a tricky regular expression? Ask for help at #{ link_to "stackoverflow.com", "http://stackoverflow.com", target: "_blank" }.
+
+        %ul.list-unstyled
+          %li <b>First</b> #{ link_to "save your fiddle", "#save", class: "save" }
+
+          - unless refiddle.new_record?
+            %li <b>Then</b>, #{ link_to "ask your question", "http://stackoverflow.com/questions/ask", target: "_blank" }.
+
+            %li <b>And</b>, reference #{ short_url( refiddle.short_code ) }.
+
+        %p= link_to "See what others are asking.", stackoverflow_index_path
+
+
+        
+  .panel.panel-default
+    .panel-heading= link_to "Legal & Credits", "#legal", data: { toggle: "collapse", parent: "#options" }
+    #legal.panel-collapse.collapse
+      .panel-body
+        %h4 License
+        %p You can fiddle all you want - no strings attached! Unless otherwise stated, fiddles are copyright the original poster.
+
+        %h5 Creative Commons License
+
+        %p If you decide to share your fiddles, they will be licensed under a #{ link_to "Creative Commons Attribution 3.0 Unported License", "http://creativecommons.org/licenses/by/3.0/", target: "_blank" }.
+
+        %h4 Credits
+        %p Thanks to the following OSS projects for making this possible...
+
+        %h5 Code Mirror
+        %p Fantastic html based #{ link_to "syntax highlighting", "http://codemirror.net/", target: "_blank" }.
+
+        %h5 jsfiddle
+        %p Inspired by the unparalleled #{ link_to "jsfiddle.net", "http://jsfiddle.net", target: "_blank" }.
+
+        %h5 jQuery
+        %p Woot! #{ link_to "jquery rocks", "http://jquery.com", target: "_blank" }.
+
+        %h5 StackOverflow
+        %p For everything #{ link_to "programming related", "http://stackoverflow.com", target: "_blank" } needed to get this site up.
+  
+  .panel.panel-default
+    .panel-heading= link_to "Feedback", "#feedback", data: { toggle: "collapse", parent: "#options" }
+    #feedback.panel-collapse.collapse
+      .panel-body
+        %p Community resources like this are driven to perfection by constructive feedback. We've love to hear what you have say about how refiddle can be more awesome.
+
+        
+        %p= link_to "Submit an Issue", "https://github.com/phallguy/refiddle-com/issues", target: "_blank", class: "btn btn-default btn-block"
+
+        %p Or, even better, #{ link_to "fork me on github.com", "https://github.com/phallguy/refiddle-com", target: "_blank" } and submit a pull request.

@@ -6,8 +6,11 @@ class ForksController < ApplicationController
   end
 
   def create
+    @original = @refiddle
     @refiddle = @refiddle.fork!( fork_params )
-    render_modified_response @refiddle, path: ->{ refiddle_url(@refiddle) }, view: "refiddles/show"
+    render_modified_response @refiddle, path: ->{ refiddle_url(@refiddle) }, view: "refiddles/show" do
+      @original.save
+    end
   end
 
 

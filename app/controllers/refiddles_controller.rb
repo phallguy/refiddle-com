@@ -14,7 +14,9 @@ class RefiddlesController < ApplicationController
   end
 
   def show
-    @fork = params[:fork].to_bool
+    if @fork = params[:fork].to_bool
+      flash[:notice] = "Save your changes to finish forking."
+    end
   end
 
   def create
@@ -28,13 +30,13 @@ class RefiddlesController < ApplicationController
         authorize! :update, @refiddle
       else
         authorize! :fork, @refiddle
-        @refiddle = @refiddle.fork!(current_user)
+        @refiddle = @refiddle.fork!( { user: current_user }.merge( refiddle_params ) )
       end
     else
       authorize! :update, @refiddle
     end
 
-    @refiddle.commit! unless params[:autosave].to_bool
+    @refiddle.commit! if @refiddle.pattern_will_change?(refiddle_params) && ! params[:autosave].to_bool
     @refiddle.write_attributes refiddle_params
 
     render_modified_response @refiddle do

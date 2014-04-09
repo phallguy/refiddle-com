@@ -54,7 +54,7 @@ describe "Fiddling" do
     fiddle = create(:refiddle, pattern: { regex: "/test/" }, user: owner, locked: true )
     login visitor
 
-    Refiddle.any_instance.should_receive(:fork).and_call_original
+    Refiddle.any_instance.should_receive(:fork!).and_call_original
     put "/refiddles/#{fiddle.id}", refiddle: { pattern_attributes: { regex: "/updated/" } }, autosave: true
 
     assigns(:refiddle).pattern.regex.should == "/updated/"

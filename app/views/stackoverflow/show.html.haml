@@ -1,0 +1,8 @@
+%h1.page-title= title @question[:title]
+= render "question", question: @question, no_title: true
+
+= link_to "Follow on StackOverflow.com", "http://stackoverflow.com/questions/#{@question[:question_id]}/#{@question[:title].parameterize}", class: "btn btn-default", target: "_blank"
+
+- content_for :asside do
+  = render "about"
+  = link_to "All Active Questions", stackoverflow_index_path

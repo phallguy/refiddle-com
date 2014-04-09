@@ -15,79 +15,39 @@
         = f.text_area :corpus_text, class: "form-control", rows: 6
       .form-group
         = f.text_field :replace_text, class: "form-control"
-      = f.submit class: "btn btn-primary"
+      = f.submit class: "hide"
 
 
 
     #main-asside
-      #options.panel-group
-        .panel.panel-default
-          .panel-heading= link_to "Regex Options", "#regex-options", data: { toggle: "collapse", parent: "#options" }
-          #regex-options.panel-collapse.collapse.in
-            .panel-body
-              = f.text_field :tags, class: "form-control"
-
-        - unless refiddle.new_record?
-          .panel.panel-default
-            .panel-heading= link_to "History", "#history", data: { toggle: "collapse", parent: "#options" }
-            #history.panel-collapse.collapse
-              .panel-body
-                .data-label Created
-                .data-value
-                  = relative_timestamp refiddle.created_at
-                  by
-                  = refiddle.user ? link_to( refiddle.user.name, profile_path(refiddle.user) ) : "anonymous"
-                .data-label Last Updated
-                .data-value
-                  = relative_timestamp refiddle.updated_at
-                  
-                - if refiddle.forked_from
-                  .data-label Forked From
-                  .data-value.text-overflow= link_to refiddle.forked_from.display_name, refiddle.forked_from
-                .data-label Revisions
-                .data-value= link_to refiddle.revisions.count, refiddle_revisions_path(refiddle)
-
-        .panel.panel-default
-          .panel-heading= link_to "Corpus Tests", "#tests", data: { toggle: "collapse", parent: "#options" }
-          #tests.panel-collapse.collapse
-            .panel-body
-              tests...
-
-        .panel.panel-default
-          .panel-heading= link_to "Ask on Stack Overflow", "#stackoverflow", data: { toggle: "collapse", parent: "#options" }
-          #stackoverflow.panel-collapse.collapse
-            .panel-body
-              %p Need help with a tricky regular expression? Ask for help at #{ link_to "stackoverflow.com", "http://stackoverflow.com", target: "_blank" }.
-
-              %ul.list-unstyled
-                %li <b>First</b> #{ link_to "save your fiddle", "#save", class: "save" }
-
-                - unless refiddle.new_record?
-                  %li <b>Then</b>, #{ link_to "ask your question", "http://stackoverflow.com/questions/ask", target: "_blank" }.
-
-                  %li <b>And</b>, reference <code>#{ short_url( refiddle.short_code ) }</code>.
-
-              %p= link_to "See what others are asking.", stackoverflow_index_path
+      = render "pre_asside"
+      = render "refiddles/asside", refiddle: refiddle, f: f
 
 
 - content_for :page_actions do
   .btn-group.navbar-left
-    = link_to "Play", "#play", class: "btn btn-primary navbar-btn"
-    = link_to "Save", "#save", class: "btn btn-primary navbar-btn save"
+    = link_to "#play", class: "btn btn-default navbar-btn" do
+      .visible-sm.visible-xs= icon :play, :fw
+      .hidden-sm.hidden-xs 
+        = icon :play, :fw
+        Play
+    = link_to "#save", class: "btn btn-default navbar-btn save" do
+      .visible-sm.visible-xs= icon :save, :fw
+      .hidden-sm.hidden-xs
+        = icon :save, :fw
+        Save
     - unless refiddle.new_record?
-      = link_to "Fork", refiddle_path( refiddle, fork: true ), class: "btn btn-primary navbar-btn"
+      = link_to refiddle_path( refiddle, fork: true ), class: "btn btn-default navbar-btn" do
+        .visible-sm.visible-xs= icon :level_up, :fw
+        .hidden-sm.hidden-xs
+          = icon :level_up, :fw
+          Fork
   - unless refiddle.new_record?
-    .input-group.navbar-left.navbar-btn
+    .input-group.navbar-left.navbar-btn.share-group
       %input.form-control.share-code{ type: "text", value: short_url(refiddle.short_code)}
       .input-group-btn
-        = link_to "Share", "#share", class: "btn btn-primary"
-
-- content_for :page_actions_mobile do
-  .btn-group
-    = link_to "#play", class: "btn btn-primary navbar-btn" do
-      %i.glyphicon.glyphicon-fw.glyphicon-play
-    = link_to "#save", class: "btn btn-primary navbar-btn save" do
-      %i.glyphicon.glyphicon-fw.glyphicon-save
-    - unless refiddle.new_record?
-      = link_to refiddle_path( refiddle, fork: true ), class: "btn btn-primary navbar-btn" do
-        %i.glyphicon.glyphicon-fw.glyphicon-level-up
+        = link_to "#share", class: "btn btn-default" do
+          .visible-sm.visible-xs= icon :share, :fw
+          .hidden-sm.hidden-xs
+            = icon :share, :fw
+            Share

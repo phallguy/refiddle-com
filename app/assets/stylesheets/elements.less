@@ -121,10 +121,31 @@
     border: 0;
     border-bottom: solid 1px @panel-default-border;
     .box-shadow( none );
+    background: transparent;
+
+    pre
+    {
+      background: @body-bg;
+    }
   }
 
   .panel-heading
   {
     background: inherit;
+  }
+}
+
+.stackoverflow-question
+{
+  max-width: 100%;
+  overflow: auto;
+}
+
+.help-block
+{
+  a
+  {
+    color: inherit;
+    text-decoration: underline;
   }
 }

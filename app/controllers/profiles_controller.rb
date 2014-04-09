@@ -1,8 +1,10 @@
 class ProfilesController < ApplicationController
+  skip_authorize_resource :user
+  skip_authorization_check
   load_and_authorize_resource :user, parent: false
 
   def index
-    @users = paged(@users)
+    redirect_to root_path
   end
 
   def show
