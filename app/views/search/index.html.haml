@@ -1,0 +1,18 @@
+%h1.page-title= title "Search Fiddles"
+
+%p
+  %small.text-muted= page_entries_info @refiddles
+
+%ul.list-unstyled
+  - @refiddles.each do |refiddle|
+    %li= render refiddle
+
+= paginate @refiddles
+
+
+- content_for :asside do
+  %hr
+  = form_tag( { url: search_index_path }, method: :get ) do |f|
+    .form-group
+      = text_field_tag :q, params[:q], class: "form-control", placeholder: "Fiddles with..."
+    = submit_tag "Search", class: "btn btn-primary btn-block"

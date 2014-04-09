@@ -1,4 +1,5 @@
 - fork ||= false
+- original ||= nil
 - options = case
   - when fork then { url: refiddle_forks_path( refiddle), method: :post }
   - when refiddle.new_record then { url: original ? refiddle_forks_path( original ) : refiddles_path, method: :post }

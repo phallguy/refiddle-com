@@ -115,6 +115,44 @@ class Refiddle
   scope :shared, ->(){ where( share: true ) }
   scope :recent, ->(){ desc( :created_at ) }
 
+  # @!method since(date)
+  # @param [Date,String] date include only dockets filed after the given date.
+  scope :since, ->(date) {
+    where( :created_at.gte => date.to_date )
+  }
+
+  # @!method until(date)
+  # @param [Date,String] date include only dockets filed after the given date.
+  scope :until, ->(date) {
+    where( :created_at.lte => date.to_date )
+  }
+
+  # @!method find_by_query(query)
+  # @param [String,SearchQuery] query to match on.
+  # @option query [String,Time] :since only include dockets filed since the given date.
+  # @option query [String,Time] :until only include dockets filed until the given date.
+  # @return [Criteria] criteria matching the given query.
+  scope :find_by_query, ->(query,options) {
+
+    query = SearchQuery.new(query) unless SearchQuery === query
+
+    conditions = []
+    fuzy_facets = !query.facets?(:title, :description,:tags)
+
+    %i{ title description tags }.each do |facet|    
+      if tokens = ( query[facet] || ( fuzy_facets && query.tokens ) )
+        terms = Regexp.escape([tokens].flatten.join(" "))
+        conditions << { "#{facet}" => /#{terms}/i } unless terms.blank?
+      end
+    end
+
+    criteria = conditions.blank? ? scoped : any_of(conditions)
+    criteria = criteria.since(query[:since]) if query[:since]
+    criteria = criteria.until(query[:until]) if query[:until]
+
+    criteria
+  }
+
   # @!endgroup
 
 

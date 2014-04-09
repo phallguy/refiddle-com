@@ -12,7 +12,7 @@ RefiddleCom::Application.routes.draw do
   resources :tagged, only: [:index,:show], path: "tagged"
   resources :users, only: [:index,:show,:edit,:update]
   resources :stackoverflow, only: [:index]
-  resources :search, only: [:index,:show]
+  resources :search, only: [:index]
 
   resources :profiles, path: "by", only: [:index,:show]
   get "stackoverflow/:id(/:title)" => "stackoverflow#show", as: :show_stackoverflow
