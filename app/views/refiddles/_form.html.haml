@@ -1,7 +1,7 @@
 - fork ||= false
 - options = case
-  - when fork then { url: refiddle_forks_path(refiddle), method: :post }
-  - when refiddle.new_record then { url: refiddles_path, method: :post }
+  - when fork then { url: refiddle_forks_path( refiddle), method: :post }
+  - when refiddle.new_record then { url: original ? refiddle_forks_path( original ) : refiddles_path, method: :post }
   - else { url: refiddle_path(refiddle), method: :put }
 - content_for :content do
   = form_for refiddle, options do |f|
@@ -15,7 +15,7 @@
         = f.text_area :corpus_text, class: "form-control", rows: 6
       .form-group
         = f.text_field :replace_text, class: "form-control"
-      = f.submit class: "hide"
+      = f.submit class: "btn btn-primary"
 
 
 
