@@ -17,8 +17,9 @@ body,html
   right: 0;
   // border-bottom: solid 1px darken( @page-header-bg, 5% );
   // background: @page-header-bg;
+  #gradient > .vertical( lighten( @navbar-inverse-bg, 2% ), darken( @navbar-inverse-bg, 8% ) );
   // color: @page-header-text;
-  .box-shadow( 0 1px 2px rgba( 0, 0, 0, .15 ) );
+  .box-shadow( ~"0 1px 4px rgba( 0, 0, 0, .45 ), inset 0 -1px 1px rgba( 255, 255, 255, .15 )" );
 
   .navbar-right
   {
@@ -41,15 +42,16 @@ body,html
   .share-code
   {
     width: 200px;
-    background: darken( @navbar-inverse-bg, 8% );
+    background: darken( @navbar-inverse-bg, 12% );
     border-color: darken( @btn-primary-border, 8% );
-    color: mix( @btn-primary-color, @navbar-inverse-bg );
+    color: mix( @btn-primary-color, @navbar-inverse-bg );    
   }
 
   .btn
   {
     .text-overflow;
     max-width: 100px;
+    .box-shadow( inset 0 -1px 1px rgba( 255, 255, 255, .10 ) );
   }
 
   @media( max-width: 870px )
@@ -66,7 +68,7 @@ body,html
 .page-alerts
 {
   position: fixed;
-  bottom: 0;
+  top: @page-header-height;
   left: 0;
   right: 0;
   z-index: @zindex-navbar; 
@@ -74,6 +76,19 @@ body,html
   .alert
   {
     margin: 0;
+  }
+
+  border-bottom: solid 1px #CCC;
+  .box-shadow( 0 1px 2px rgba( 0, 0, 0, .15 ) );
+
+  &.slide
+  {
+    position: absolute;
+
+    &.in
+    {
+      top: @page-header-height;
+    }
   }
 }
 
@@ -85,6 +100,7 @@ body,html
   bottom: 0;
   top: @page-header-height;
   padding: @grid-gutter-width / 2;
+  border-right: solid 1px @panel-default-border;
 
   .page-title
   {

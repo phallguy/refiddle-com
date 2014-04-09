@@ -47,10 +47,33 @@
                 .data-label Revisions
                 .data-value= link_to refiddle.revisions.count, refiddle_revisions_path(refiddle)
 
+        .panel.panel-default
+          .panel-heading= link_to "Corpus Tests", "#tests", data: { toggle: "collapse", parent: "#options" }
+          #tests.panel-collapse.collapse
+            .panel-body
+              tests...
+
+        .panel.panel-default
+          .panel-heading= link_to "Ask on Stack Overflow", "#stackoverflow", data: { toggle: "collapse", parent: "#options" }
+          #stackoverflow.panel-collapse.collapse
+            .panel-body
+              %p Need help with a tricky regular expression? Ask for help at #{ link_to "stackoverflow.com", "http://stackoverflow.com", target: "_blank" }.
+
+              %ul.list-unstyled
+                %li <b>First</b> #{ link_to "save your fiddle", "#save", class: "save" }
+
+                - unless refiddle.new_record?
+                  %li <b>Then</b>, #{ link_to "ask your question", "http://stackoverflow.com/questions/ask", target: "_blank" }.
+
+                  %li <b>And</b>, reference <code>#{ short_url( refiddle.short_code ) }</code>.
+
+              %p= link_to "See what others are asking.", stackoverflow_index_path
+
+
 - content_for :page_actions do
   .btn-group.navbar-left
     = link_to "Play", "#play", class: "btn btn-primary navbar-btn"
-    = link_to "Save", "#save", class: "btn btn-primary navbar-btn"
+    = link_to "Save", "#save", class: "btn btn-primary navbar-btn save"
     - unless refiddle.new_record?
       = link_to "Fork", refiddle_path( refiddle, fork: true ), class: "btn btn-primary navbar-btn"
   - unless refiddle.new_record?
@@ -63,7 +86,7 @@
   .btn-group
     = link_to "#play", class: "btn btn-primary navbar-btn" do
       %i.glyphicon.glyphicon-fw.glyphicon-play
-    = link_to "#save", class: "btn btn-primary navbar-btn" do
+    = link_to "#save", class: "btn btn-primary navbar-btn save" do
       %i.glyphicon.glyphicon-fw.glyphicon-save
     - unless refiddle.new_record?
       = link_to refiddle_path( refiddle, fork: true ), class: "btn btn-primary navbar-btn" do

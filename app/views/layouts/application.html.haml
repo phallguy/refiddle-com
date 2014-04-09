@@ -5,9 +5,9 @@
     = render partial: "shared/head"
   %body
     #body-content      
-      .page-alerts
+      .page-alerts.slide
         - flash.each do |name,msg|
-          .alert.slide.up{ class: "alert-#{name}" }= msg
+          .alert{ class: "alert-#{name}" }= msg
       = yield(:pre_content)
       - if content_for?(:content)
         = yield(:content)
@@ -40,9 +40,9 @@
               %ul.list-inline.navbar-right
                 %li= link_to "Browse", tagged_index_path, class: "btn btn-primary navbar-btn"
                 - if current_user
-                  %li= link_to current_user.first_name, profile_path(current_user), class: "btn btn-success navbar-btn"
+                  %li= link_to current_user.first_name, profile_path(current_user), class: "btn btn-primary navbar-btn"
                 - else
-                  %li= link_to "Sign In", signin_path, class: "btn btn-success navbar-btn"
+                  %li= link_to "Sign In", signin_path, class: "btn btn-primary navbar-btn"
 
 
     = render partial: "shared/scripts"

@@ -10,8 +10,14 @@ $ ->
     if id = $t.attr("id")
       $("a[href=\"##{id}\"][data-toggle=tab]").tab('show')
 
-  alerts = $(".page-alerts .alert.slide")
-    .click( -> { debugger; $(this).removeClass("in") })
+  slides = $(".slide")
     .removeClass("in")
 
-  setTimeout((-> alerts.addClass("in")),1)
+  alerts = $(".page-alerts")
+    .on "click", -> 
+      $(this).removeClass("in")
+
+  setTimeout((-> slides.addClass("in")),1)
+  hideAlerts = ->
+    setTimeout((-> if alerts.is(":hover") then hideAlerts() else alerts.removeClass("in") ), 4000)
+  hideAlerts()
