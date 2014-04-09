@@ -107,6 +107,31 @@
   color: @state-success-text; 
 }
 
+.match, .match-fail
+{
+  background: @state-success-bg;
+  color: @state-success-text;
+  padding: 3px 0;
+  margin: -3px 0;
+}
+
+.match + .match:nth-child(even)
+{
+  background: lighten( @state-success-bg, 5% );
+}
+
+.match-fail
+{
+  background: @state-danger-bg;
+  color: @state-danger-text;
+}
+
+.match-fail + .match-fail:nth-child(even)
+{
+  background: lighten( @state-danger-bg, 5% );
+}
+
+
 .btn-stackoverflow
 {
   .button-variant( #FFF; #FE7924; #FE7924 );

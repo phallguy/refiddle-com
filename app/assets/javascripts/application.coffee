@@ -6,3 +6,4 @@
 #= require rapped/rapped
 #= require app.js
 
+window.Flavors ||= {}
