@@ -485,6 +485,14 @@
         } else {
           return this.regexEditor.setValue("/" + pattern.pattern + "/" + (pattern.options.replace(option, '')));
         }
+      },
+      "change #refiddle_flavor": function(e) {
+        var opt;
+        this.form.removeClass(function(index, css) {
+          return (css.match(/flavor-.*/i) || []).join(" ");
+        });
+        opt = $("option:selected", e.currentTarget);
+        return this.form.addClass("flavor-" + (opt.data('flavor')));
       }
     };
 

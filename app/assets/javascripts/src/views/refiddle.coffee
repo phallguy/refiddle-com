@@ -17,6 +17,13 @@ class App.Views.Refiddle extends Backbone.View
       else
         @regexEditor.setValue( "/#{pattern.pattern}/#{pattern.options.replace( option, '' )}" )
 
+    "change #refiddle_flavor" : (e) ->
+      @form.removeClass (index,css) ->
+        ( css.match(/flavor-.*/i) || [] ).join(" ")
+
+      opt = $( "option:selected",  e.currentTarget )
+
+      @form.addClass( "flavor-#{opt.data('flavor')}" )
 
 
   initialize: (options={}) ->

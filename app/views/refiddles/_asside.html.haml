@@ -5,7 +5,7 @@
       .panel-body
         .form-group
           .form-control-select
-            = f.select :flavor, options_from_collection_for_select( Refiddle::FLAVORS, :first, :last, refiddle.flavor ), {}, class: "form-control"
+            = f.select :flavor, options_for_select( Refiddle::FLAVORS.map{|k,v| [v,k,{ data: {flavor: v.parameterize}}]}, refiddle.flavor ), {}, class: "form-control"
 
         .flavor-options
           - Refiddle::FLAVORS.values.each do |flavor|
