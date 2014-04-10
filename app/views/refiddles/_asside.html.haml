@@ -20,17 +20,19 @@
         .form-group
           = f.text_area :description, class: "form-control", placeholder: "Description...", rows: 5
 
-        .checkbox
-          %label
-            = f.check_box :locked
-            Only I can edit this refiddle
+        - if can?(:share,refiddle)
 
-        .checkbox
-          %label
-            = f.check_box :share
-            Share with other refiddle.com users
-            .help-block
-              Shared fiddles are licensed under a #{ link_to "Creative Commons Attribution 3.0 Unported License", "http://creativecommons.org/licenses/by/3.0/", target: "_blank" }.
+          .checkbox
+            %label
+              = f.check_box :locked
+              Only I can edit this refiddle
+
+          .checkbox
+            %label
+              = f.check_box :share
+              Share with other refiddle.com users
+              .help-block
+                Shared fiddles are licensed under a #{ link_to "Creative Commons Attribution 3.0 Unported License", "http://creativecommons.org/licenses/by/3.0/", target: "_blank" }.
 
   - unless refiddle.new_record?
     .panel.panel-default

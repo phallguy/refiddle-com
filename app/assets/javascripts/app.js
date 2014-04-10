@@ -1,5 +1,5 @@
 (function() {
-  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2,
+  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2, _ref3,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -227,7 +227,40 @@
     };
   });
 
-  window.Flavors || (window.Flavors = {});
+  window.Flavors || (window.Flavors = {
+    getFlavor: function(name) {
+      switch (name) {
+        case "ruby":
+          return new Flavors.Ruby;
+        default:
+          return new Flavors.JavaScript;
+      }
+    }
+  });
+
+  Flavors.Remote = (function() {
+    function Remote() {}
+
+    Remote.prototype.remote = true;
+
+    Remote.prototype.match = function(pattern, corpus, callback) {
+      return $.post(this.matchUri, {
+        pattern: "/" + pattern.pattern + "/" + pattern.options,
+        corpus_text: corpus
+      }, callback, "json");
+    };
+
+    Remote.prototype.replace = function(pattern, corpus, replacement, callback) {
+      return $.post(this.replaceUri, {
+        pattern: "/" + pattern.pattern + "/" + pattern.options,
+        corpus_text: corpus,
+        replace_text: replacement
+      }, callback, "json");
+    };
+
+    return Remote;
+
+  })();
 
   Flavors.JavaScript = (function() {
     function JavaScript() {}
@@ -421,6 +454,22 @@
 
   })(Matcher);
 
+  Flavors.Ruby = (function(_super) {
+    __extends(Ruby, _super);
+
+    function Ruby() {
+      _ref2 = Ruby.__super__.constructor.apply(this, arguments);
+      return _ref2;
+    }
+
+    Ruby.prototype.replaceUri = "/regex/replace/ruby";
+
+    Ruby.prototype.matchUri = "/regex/evaluate/ruby";
+
+    return Ruby;
+
+  })(Flavors.Remote);
+
   $(function() {
     var alerts, hideAlerts, slides;
     $("a[href=\"" + location.hash + "\"][data-toggle=tab]").tab('show');
@@ -462,8 +511,8 @@
       this.updateReplacement = __bind(this.updateReplacement, this);
       this.highlightMatches = __bind(this.highlightMatches, this);
       this.updateMatches = __bind(this.updateMatches, this);
-      _ref2 = Refiddle.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      _ref3 = Refiddle.__super__.constructor.apply(this, arguments);
+      return _ref3;
     }
 
     Refiddle.prototype.literalRegex = /^\/[^\/]+\/\w*/m;
@@ -486,14 +535,7 @@
           return this.regexEditor.setValue("/" + pattern.pattern + "/" + (pattern.options.replace(option, '')));
         }
       },
-      "change #refiddle_flavor": function(e) {
-        var opt;
-        this.form.removeClass(function(index, css) {
-          return (css.match(/flavor-.*/i) || []).join(" ");
-        });
-        opt = $("option:selected", e.currentTarget);
-        return this.form.addClass("flavor-" + (opt.data('flavor')));
-      }
+      "change #refiddle_flavor": "chooseFlavor"
     };
 
     Refiddle.prototype.initialize = function(options) {
@@ -502,7 +544,6 @@
         options = {};
       }
       Refiddle.__super__.initialize.apply(this, arguments);
-      this.flavor = new Flavors.JavaScript();
       this.form = $("#refiddle-form");
       this.textGroup = $("#text");
       this.regexText = $("#refiddle_regex");
@@ -513,6 +554,7 @@
       $(window).on("resize", function() {
         return _this.resizeTextGroup();
       });
+      this.chooseFlavor();
       this.regexEditor = CodeMirror.fromTextArea(this.regexText[0], {
         mode: "regex"
       });
@@ -533,7 +575,7 @@
       this.replaceEditor.on("changes", this.updateReplacement);
       this.resizeTextGroup();
       this.textGroup.find(".in").removeClass("in");
-      this.textGroup.find(".panel-collapse:last").addClass("in");
+      this.textGroup.find(".panel-collapse:first").addClass("in");
       this.updateMatches();
       return this.updateReplacement();
     };
@@ -568,6 +610,17 @@
         $(".flavor-options [name=" + opt + "]").prop("checked", true);
       }
       return void 0;
+    };
+
+    Refiddle.prototype.chooseFlavor = function() {
+      var flavor, opt;
+      this.form.removeClass(function(index, css) {
+        return (css.match(/flavor-.*/i) || []).join(" ");
+      });
+      opt = $("#refiddle_flavor option:selected");
+      flavor = opt.data('flavor');
+      this.form.addClass("flavor-" + (opt.data('flavor')));
+      return this.flavor = Flavors.getFlavor(flavor);
     };
 
     Refiddle.prototype.getCorpus = function() {
@@ -612,7 +665,7 @@
     Refiddle.prototype.updateMatchResults = function(matches) {
       var summary;
       summary = matches.matchSummary;
-      $("html").toggleClass("with-tests", summary.tests);
+      $("html").toggleClass("with-tests", !!summary.tests);
       $("html").toggleClass("tests-passing", summary.failed === 0);
       $("html").toggleClass("tests-failing", summary.failed > 0);
       $(".match-results .total .count").text(summary.total);

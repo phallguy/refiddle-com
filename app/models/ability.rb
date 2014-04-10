@@ -23,7 +23,7 @@ class Ability < Rapped::Ability
     end
 
     can [:update,:read], user
-    can [:update], Refiddle, user: user
+    can [:update,:share], Refiddle, user: user
 
     user.roles && user.roles.each{|r| send r if respond_to? r}   
 

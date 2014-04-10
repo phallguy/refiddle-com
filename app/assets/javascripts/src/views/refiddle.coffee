@@ -17,19 +17,12 @@ class App.Views.Refiddle extends Backbone.View
       else
         @regexEditor.setValue( "/#{pattern.pattern}/#{pattern.options.replace( option, '' )}" )
 
-    "change #refiddle_flavor" : (e) ->
-      @form.removeClass (index,css) ->
-        ( css.match(/flavor-.*/i) || [] ).join(" ")
-
-      opt = $( "option:selected",  e.currentTarget )
-
-      @form.addClass( "flavor-#{opt.data('flavor')}" )
+    "change #refiddle_flavor" : "chooseFlavor"
 
 
   initialize: (options={}) ->
     super
 
-    @flavor = new Flavors.JavaScript()
 
     @form             = $("#refiddle-form")
     @textGroup        = $("#text")
@@ -41,6 +34,8 @@ class App.Views.Refiddle extends Backbone.View
 
     $(window).on "resize", =>
       @resizeTextGroup()
+
+    @chooseFlavor()
 
 
     @regexEditor = CodeMirror.fromTextArea @regexText[0],
@@ -66,7 +61,7 @@ class App.Views.Refiddle extends Backbone.View
 
     # Need to do this so CodeMirror can initialize on the replace text box.
     @textGroup.find(".in").removeClass("in")
-    @textGroup.find(".panel-collapse:last").addClass("in")
+    @textGroup.find(".panel-collapse:first").addClass("in")
 
     @updateMatches()
     @updateReplacement()
@@ -99,6 +94,15 @@ class App.Views.Refiddle extends Backbone.View
       $(".flavor-options [name=#{opt}]").prop("checked", true)
     undefined
 
+  chooseFlavor: ->
+    @form.removeClass (index,css) ->
+      ( css.match(/flavor-.*/i) || [] ).join(" ")
+
+    opt = $( "#refiddle_flavor option:selected" )
+    flavor = opt.data('flavor')
+    @form.addClass( "flavor-#{opt.data('flavor')}" )
+    @flavor = Flavors.getFlavor( flavor )    
+
   getCorpus: ->
     @corpusEditor.getValue()
 
@@ -129,7 +133,7 @@ class App.Views.Refiddle extends Backbone.View
   updateMatchResults: (matches) ->
     summary = matches.matchSummary
 
-    $("html").toggleClass( "with-tests", summary.tests )
+    $("html").toggleClass( "with-tests", !!summary.tests )
     $("html").toggleClass( "tests-passing", summary.failed == 0 )
     $("html").toggleClass( "tests-failing", summary.failed > 0 )
 
