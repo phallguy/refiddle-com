@@ -6,6 +6,18 @@ class App.Views.Refiddle extends Backbone.View
       e.preventDefault()
       @form.submit()
 
+    "change .flavor-options [type=checkbox]" : (e) ->
+      pattern = @getPattern()
+      $t = $(e.currentTarget)
+      option = $t.attr('name')
+
+      if $t.prop("checked")
+        unless pattern.options.indexOf(option) >= 0
+          @regexEditor.setValue( "/#{pattern.pattern}/#{pattern.options}#{option}" )
+      else
+        @regexEditor.setValue( "/#{pattern.pattern}/#{pattern.options.replace( option, '' )}" )
+
+
 
   initialize: (options={}) ->
     super
@@ -74,6 +86,12 @@ class App.Views.Refiddle extends Backbone.View
 
     parsed
 
+  applyOptions: (options) ->
+    $(".flavor-options [type=checkbox]").prop("checked", false)
+    for opt in options
+      $(".flavor-options [name=#{opt}]").prop("checked", true)
+    undefined
+
   getCorpus: ->
     @corpusEditor.getValue()
 
@@ -81,7 +99,9 @@ class App.Views.Refiddle extends Backbone.View
     @replaceEditor.getValue()
 
   updateMatches: =>
-    @flavor.match @getPattern(), @getCorpus(), (matches) =>
+    pattern = @getPattern()
+    @applyOptions( pattern.options )
+    @flavor.match pattern, @getCorpus(), (matches) =>
       @matches = matches
       @highlightMatches( @matches )
 

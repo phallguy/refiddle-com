@@ -472,6 +472,19 @@
       "click .save": function(e) {
         e.preventDefault();
         return this.form.submit();
+      },
+      "change .flavor-options [type=checkbox]": function(e) {
+        var $t, option, pattern;
+        pattern = this.getPattern();
+        $t = $(e.currentTarget);
+        option = $t.attr('name');
+        if ($t.prop("checked")) {
+          if (!(pattern.options.indexOf(option) >= 0)) {
+            return this.regexEditor.setValue("/" + pattern.pattern + "/" + pattern.options + option);
+          }
+        } else {
+          return this.regexEditor.setValue("/" + pattern.pattern + "/" + (pattern.options.replace(option, '')));
+        }
       }
     };
 
@@ -539,6 +552,16 @@
       return parsed;
     };
 
+    Refiddle.prototype.applyOptions = function(options) {
+      var opt, _i, _len;
+      $(".flavor-options [type=checkbox]").prop("checked", false);
+      for (_i = 0, _len = options.length; _i < _len; _i++) {
+        opt = options[_i];
+        $(".flavor-options [name=" + opt + "]").prop("checked", true);
+      }
+      return void 0;
+    };
+
     Refiddle.prototype.getCorpus = function() {
       return this.corpusEditor.getValue();
     };
@@ -548,8 +571,11 @@
     };
 
     Refiddle.prototype.updateMatches = function() {
-      var _this = this;
-      return this.flavor.match(this.getPattern(), this.getCorpus(), function(matches) {
+      var pattern,
+        _this = this;
+      pattern = this.getPattern();
+      this.applyOptions(pattern.options);
+      return this.flavor.match(pattern, this.getCorpus(), function(matches) {
         _this.matches = matches;
         return _this.highlightMatches(_this.matches);
       });
