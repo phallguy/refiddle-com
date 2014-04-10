@@ -1,8 +1,126 @@
 (function() {
-  var Matcher, NegativeMatcher, PositiveMatcher, _ref, _ref1, _ref2,
+  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  CorpusTokenizer = (function() {
+    function CorpusTokenizer() {}
+
+    CorpusTokenizer.prototype.tokenize = function(stream) {
+      var ch, sol;
+      this.state || (this.state = this._plain);
+      sol = stream.sol();
+      ch = stream.next();
+      if (sol && ch === '#') {
+        return this.changeState(stream);
+      } else {
+        return this.state(stream, ch);
+      }
+    };
+
+    CorpusTokenizer.prototype.changeState = function(stream) {
+      this.state = (function() {
+        switch (stream.peek()) {
+          case "+":
+            return this._operator;
+          case "-":
+            return this._operator;
+          case "#":
+            return this._comment;
+        }
+      }).call(this);
+      return "bracket";
+    };
+
+    CorpusTokenizer.prototype._operator = function(stream, ch) {
+      switch (ch) {
+        case "+":
+        case "-":
+          return "operator";
+        case '#':
+          this.state = this._comment;
+          stream.skipToEnd();
+          return "comment";
+        default:
+          stream.skipToEnd();
+          this.state = this._plain;
+          return "header";
+      }
+    };
+
+    CorpusTokenizer.prototype._comment = function(stream) {
+      stream.skipToEnd();
+      return "comment";
+    };
+
+    CorpusTokenizer.prototype._plain = function(stream) {
+      stream.skipToEnd();
+      return null;
+    };
+
+    return CorpusTokenizer;
+
+  })();
+
+  CodeMirror.defineMode('corpus', function() {
+    return {
+      startState: function() {
+        return new CorpusTokenizer;
+      },
+      token: function(stream, state) {
+        return state.tokenize(stream);
+      }
+    };
+  });
+
+  RegexTokenizer = (function() {
+    function RegexTokenizer() {}
+
+    RegexTokenizer.prototype.tokenize = function(stream) {
+      var ch;
+      ch = stream.next();
+      return null;
+    };
+
+    return RegexTokenizer;
+
+  })();
+
+  CodeMirror.defineMode('regex', function() {
+    return {
+      startState: function() {
+        return new RegexTokenizer;
+      },
+      token: function(stream, state) {
+        return state.tokenize(stream);
+      }
+    };
+  });
+
+  RegexReplaceTokenizer = (function() {
+    function RegexReplaceTokenizer() {}
+
+    RegexReplaceTokenizer.prototype.tokenize = function(stream) {
+      var ch;
+      ch = stream.next();
+      return null;
+    };
+
+    return RegexReplaceTokenizer;
+
+  })();
+
+  CodeMirror.defineMode('regex_replace', function() {
+    return {
+      startState: function() {
+        return new RegexReplaceTokenizer;
+      },
+      token: function(stream, state) {
+        return state.tokenize(stream);
+      }
+    };
+  });
 
   window.Flavors || (window.Flavors = {});
 
@@ -72,7 +190,7 @@
             return positiveMatcher;
           case '-':
             return negativeMatcher;
-          case '#':
+          default:
             return nonMatcher;
         }
       };
@@ -238,15 +356,20 @@
       $(window).on("resize", function() {
         return _this.resizeTextGroup();
       });
-      this.regexEditor = CodeMirror.fromTextArea(this.regexText[0]);
+      this.regexEditor = CodeMirror.fromTextArea(this.regexText[0], {
+        mode: "regex"
+      });
       this.regexEditor.on("viewportChange", this.resizeTextGroup);
       this.regexEditor.on("changes", this.updateMatches);
       this.corpusEditor = CodeMirror.fromTextArea(this.corpusText[0], {
         lineWrapping: true,
-        lineNumbers: true
+        lineNumbers: true,
+        mode: "corpus"
       });
       this.corpusEditor.on("changes", this.updateMatches);
-      this.replaceEditor = CodeMirror.fromTextArea(this.replaceText[0]);
+      this.replaceEditor = CodeMirror.fromTextArea(this.replaceText[0], {
+        mode: "regex_replace"
+      });
       this.replaceEditor.on("viewportChange", this.resizeTextGroup);
       this.replaceEditor.refresh();
       this.resizeTextGroup();

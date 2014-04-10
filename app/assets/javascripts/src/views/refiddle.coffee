@@ -24,18 +24,19 @@ class App.Views.Refiddle extends Backbone.View
       @resizeTextGroup()
 
 
-    @regexEditor = CodeMirror.fromTextArea( @regexText[0] )
+    @regexEditor = CodeMirror.fromTextArea @regexText[0],
+      mode: "regex"      
     @regexEditor.on "viewportChange", @resizeTextGroup
     @regexEditor.on "changes", @updateMatches
 
     @corpusEditor = CodeMirror.fromTextArea @corpusText[0],
       lineWrapping: true
       lineNumbers: true
+      mode: "corpus"
     @corpusEditor.on "changes", @updateMatches
 
-
-
-    @replaceEditor = CodeMirror.fromTextArea( @replaceText[0] )
+    @replaceEditor = CodeMirror.fromTextArea @replaceText[0],
+      mode: "regex_replace"
     @replaceEditor.on "viewportChange", @resizeTextGroup
     @replaceEditor.refresh()
 

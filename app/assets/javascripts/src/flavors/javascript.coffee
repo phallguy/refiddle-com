@@ -55,7 +55,7 @@ class Flavors.JavaScript
       switch line.charAt(1)
         when '+' then positiveMatcher
         when '-' then negativeMatcher
-        when '#' then nonMatcher
+        else nonMatcher
 
     lines   = corpus.split "\n"
     matcher = nonMatcher

@@ -32,3 +32,20 @@
 {
   z-index: 1000;
 }
+
+.cm-s-default
+{
+  .cm-comment{ color: @text-muted; }
+  .cm-operator{ font-weight: bold; color: #00F; }
+  .cm-header{ font-weight: bold; color: inherit; }
+}
+
+.CodeMirror-focused .CodeMirror-selected, ::selection
+{
+  background: @select-bg;
+}
+
+.CodeMirror-selected
+{ 
+  background: mix( @input-bg, @select-bg );
+}
