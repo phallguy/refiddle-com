@@ -1,5 +1,5 @@
 (function() {
-  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2, _ref3,
+  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2, _ref3, _ref4,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -232,6 +232,8 @@
       switch (name) {
         case "ruby":
           return new Flavors.Ruby;
+        case "net":
+          return new Flavors.Net;
         default:
           return new Flavors.JavaScript;
       }
@@ -454,12 +456,28 @@
 
   })(Matcher);
 
+  Flavors.Net = (function(_super) {
+    __extends(Net, _super);
+
+    function Net() {
+      _ref2 = Net.__super__.constructor.apply(this, arguments);
+      return _ref2;
+    }
+
+    Net.prototype.replaceUri = "/regex/replace/dotnet";
+
+    Net.prototype.matchUri = "/regex/evaluate/dotnet";
+
+    return Net;
+
+  })(Flavors.Remote);
+
   Flavors.Ruby = (function(_super) {
     __extends(Ruby, _super);
 
     function Ruby() {
-      _ref2 = Ruby.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      _ref3 = Ruby.__super__.constructor.apply(this, arguments);
+      return _ref3;
     }
 
     Ruby.prototype.replaceUri = "/regex/replace/ruby";
@@ -511,8 +529,8 @@
       this.updateReplacement = __bind(this.updateReplacement, this);
       this.highlightMatches = __bind(this.highlightMatches, this);
       this.updateMatches = __bind(this.updateMatches, this);
-      _ref3 = Refiddle.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      _ref4 = Refiddle.__super__.constructor.apply(this, arguments);
+      return _ref4;
     }
 
     Refiddle.prototype.literalRegex = /^\/[^\/]+\/\w*/m;
@@ -653,7 +671,6 @@
         this.refreshingCorpus = true;
         this.refreshCorpus = false;
         $("#corpus").addClass("refreshing");
-        console.log("Running on server...");
         return this.flavor.match(pattern, this.getCorpus(), function(matches) {
           $("#corpus").removeClass("refreshing");
           _this.refreshingCorpus = false;

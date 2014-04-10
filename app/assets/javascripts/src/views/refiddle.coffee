@@ -126,7 +126,6 @@ class App.Views.Refiddle extends Backbone.View
       @refreshingCorpus = true
       @refreshCorpus = false
       $("#corpus").addClass( "refreshing" )
-      console.log "Running on server..."
       @flavor.match pattern, @getCorpus(), (matches) =>
         $("#corpus").removeClass( "refreshing" )
         @refreshingCorpus = false
