@@ -190,7 +190,7 @@ class Refiddle
     URL_PATTERN = /\w+\.[a-z]{2,}/i
     PROTOCOL_PATTERN = /[a-z]+:\/\/?\w+/i
     LINK_PATTERN = /href|src|rel=/i
-    SAMPLE_ATTRS = { regex: "/k[^\s]*s/g", corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.", replace_text: "tacos" }.freeze
+    SAMPLE_ATTRS = { regex: "/k[^\\s]*s/g", corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.", replace_text: "tacos" }.freeze
 
     def validate_no_url(field)
       val = send(field)

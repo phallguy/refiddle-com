@@ -79,8 +79,113 @@
 
     RegexTokenizer.prototype.tokenize = function(stream) {
       var ch;
+      this.state || (this.state = this._start);
       ch = stream.next();
-      return null;
+      if (ch === '\\') {
+        stream.next();
+        return "quote";
+      } else {
+        return this.state(stream, ch);
+      }
+    };
+
+    RegexTokenizer.prototype._comment = function(stream) {
+      return "comment";
+    };
+
+    RegexTokenizer.prototype._plain = function(stream, ch) {
+      switch (ch) {
+        case '/':
+          this.state = this._options;
+          return "qualifier";
+        case "[":
+          this.entering = true;
+          this.ccDepth = 0;
+          this.state = this._characterClass;
+          return "meta";
+        case "(":
+          this.entering = true;
+          this.state = this._group;
+          return "bracket";
+        case ")":
+          return "bracket";
+        case "{":
+          if (stream.skipTo('}')) {
+            stream.next();
+          }
+          return "tag";
+        case ".":
+        case "*":
+        case "?":
+        case '|':
+          return "operator";
+        case "^":
+        case "$":
+          return "atom";
+      }
+    };
+
+    RegexTokenizer.prototype._start = function(stream, ch) {
+      this.state = this._plain;
+      if (ch === '/') {
+        return "qualifier";
+      } else {
+        return this._plain(stream, ch);
+      }
+    };
+
+    RegexTokenizer.prototype._characterClass = function(stream, ch) {
+      var ent;
+      ent = this.entering;
+      this.entering = false;
+      switch (ch) {
+        case '[':
+          this.ccDepth++;
+          this.entering = true;
+          return "meta";
+        case ']':
+          if (this.ccDepth-- === 0) {
+            this.state = this._plain;
+          }
+          return "meta";
+        case '-':
+          return "qualifier";
+        default:
+          if (ent && ch === '^') {
+            return "operator";
+          } else {
+            return "string";
+          }
+      }
+    };
+
+    RegexTokenizer.prototype._group = function(stream, ch) {
+      var ent;
+      ent = this.entering;
+      this.entering = false;
+      this.state = this._plain;
+      if (ent && ch === '?') {
+        this.state = this._name;
+        return "tag";
+      } else {
+        return this._plain();
+      }
+    };
+
+    RegexTokenizer.prototype._name = function(stream, ch) {
+      this.state = this._group;
+      if (ch === '<' || ch === '\'') {
+        stream.skipTo(ch === '<' ? '>' : '\'');
+        stream.next();
+        return "tag";
+      } else {
+        return this._group(stream, ch);
+      }
+    };
+
+    RegexTokenizer.prototype._options = function(stream, ch) {
+      stream.skipToEnd();
+      return "attribute";
     };
 
     return RegexTokenizer;

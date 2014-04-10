@@ -10,6 +10,7 @@
 
     #main-content
       = render "error_list", model: refiddle
+      = render "error_list", model: refiddle.pattern
       .form-group
         = f.text_field :regex, class: "form-control"
       #text.panel-group        

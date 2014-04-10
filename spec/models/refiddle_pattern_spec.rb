@@ -4,7 +4,7 @@ require 'spec_helper'
 describe RefiddlePattern do
   describe "validations" do
 
-    ["/./", "/aa/g"].each do |valid_pattern|
+    ["/./", "/aa/g", "/k[^s\/]{1,}s*/g"].each do |valid_pattern|
       it "allows #{valid_pattern}" do
         RefiddlePattern.new( regex: valid_pattern ).should be_valid
       end

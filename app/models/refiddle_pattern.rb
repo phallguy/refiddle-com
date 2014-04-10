@@ -2,7 +2,7 @@ class RefiddlePattern
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  LITERALEXP_PATTERN = /\A\/(?<source>[^\/]+)\/(?<options>\w*)\z/m;
+  LITERALEXP_PATTERN = /\A\/(?<source>.+)\/(?<options>\w*)\z/m;
 
   # @!attribute
   # @return [Refiddle] that the pattern belongs to.
