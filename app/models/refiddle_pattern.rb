@@ -53,8 +53,8 @@ class RefiddlePattern
 
       expander = Expander.new
 
-      left = original.scan(WORD_SPLIT_PATTERN)
-      right = modified.scan(WORD_SPLIT_PATTERN)
+      left = ( original && original.scan(WORD_SPLIT_PATTERN) ) || []
+      right = ( modified && modified.scan(WORD_SPLIT_PATTERN) ) || []
 
       Diff::LCS.traverse_sequences( left, right, expander )      
 
