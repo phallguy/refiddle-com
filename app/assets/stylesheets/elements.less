@@ -107,7 +107,7 @@
   color: @state-success-text; 
 }
 
-.match, .match-fail
+.match, .nomatch
 {
   background: @state-success-bg;
   color: @state-success-text;
@@ -120,13 +120,13 @@
   background: lighten( @state-success-bg, 5% );
 }
 
-.match-fail
+.nomatch
 {
   background: @state-danger-bg;
   color: @state-danger-text;
 }
 
-.match-fail + .match-fail:nth-child(even)
+.nomatch + .nomatch:nth-child(even)
 {
   background: lighten( @state-danger-bg, 5% );
 }

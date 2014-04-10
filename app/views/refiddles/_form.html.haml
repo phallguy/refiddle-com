@@ -31,12 +31,15 @@
 
           #corpus.panel-collapse.collapse.in
             .panel-body
+              = icon :refresh, :spin
               = f.text_area :corpus_text, class: "form-control", rows: 6
 
         .panel.panel-default><
-          .panel-heading= link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
+          .panel-heading
+            = link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
           #replace.panel-collapse.collapse.in
             .panel-body
+              = icon :refresh, :spin
               .form-group
                 = f.text_field :replace_text, class: "form-control"
               .form-group

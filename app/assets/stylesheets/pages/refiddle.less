@@ -117,7 +117,28 @@
     }
   }
 
+  #text .panel-body
+  {
+    position: relative;
+  }
 
+  .glyphicon-refresh
+  {    
+    display: none;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    color: @state-info-text;
+  }
+
+  .refreshing
+  {
+    .glyphicon-refresh
+    {
+      display: inline-block;
+    }
+  }
 }
 
 .match-results

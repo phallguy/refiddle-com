@@ -1,5 +1,6 @@
 class App.Views.Refiddle extends Backbone.View
   literalRegex: /^\/[^\/]+\/\w*/m
+  debounceRate: 250
 
   events:
     "click .save" : (e) ->
@@ -17,12 +18,14 @@ class App.Views.Refiddle extends Backbone.View
       else
         @regexEditor.setValue( "/#{pattern.pattern}/#{pattern.options.replace( option, '' )}" )
 
-    "change #refiddle_flavor" : "chooseFlavor"
+    "change #refiddle_flavor" : ->
+      @chooseFlavor()
+      @updateMatches()
+      @updateReplacement()
 
 
   initialize: (options={}) ->
     super
-
 
     @form             = $("#refiddle-form")
     @textGroup        = $("#text")
@@ -110,11 +113,27 @@ class App.Views.Refiddle extends Backbone.View
     @replaceEditor.getValue()
 
   updateMatches: =>
+    @updateMatchesDebounced ||= _.debounce @_updateMatches, @debounceRate, true
+    @updateMatchesDebounced()
+
+  _updateMatches: ->
     pattern = @getPattern()
     @applyOptions( pattern.options )
-    @flavor.match pattern, @getCorpus(), (matches) =>
-      @matches = matches
-      @highlightMatches( @matches )
+
+    if @refreshingCorpus
+      @refreshCorpus = true
+    else
+      @refreshingCorpus = true
+      @refreshCorpus = false
+      $("#corpus").addClass( "refreshing" )
+      console.log "Running on server..."
+      @flavor.match pattern, @getCorpus(), (matches) =>
+        $("#corpus").removeClass( "refreshing" )
+        @refreshingCorpus = false
+        @matches = matches
+        @highlightMatches( @matches )
+        @updateMatches() if @refreshCorpus
+
 
   highlightMatches: (matches) =>
     @updateMatchResults( matches )
@@ -143,11 +162,22 @@ class App.Views.Refiddle extends Backbone.View
 
 
   updateReplacement: =>
-    @flavor.replace @getPattern(), @getCorpus(), @getReplacement(), (replacement) =>
-      @replaceResults.text( replacement.replace )
+    @updateReplacementDebounced ||= _.debounce @_updateReplacement, @debounceRate, true
+    @updateReplacementDebounced()
+
+  _updateReplacement: ->
+    if @refreshingReplacement
+      @refreshReplacement
+    else
+      @refreshReplacement = false
+      @refreshingReplacement = true
+      @flavor.replace @getPattern(), @getCorpus(), @getReplacement(), (replacement) =>
+        @refreshingReplacement = false
+        @replaceResults.text( replacement.replace )
+        @updateReplacement() if @refreshReplacement
 
   resizeTextGroup: =>
-    @resizeTextGroupDebounced ||= _.debounce @_resizeTextGroup, 50, true
+    @resizeTextGroupDebounced ||= _.debounce @_resizeTextGroup, @debounceRate, true
     @resizeTextGroupDebounced()
 
   _resizeTextGroup: ->

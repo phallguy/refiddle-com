@@ -405,7 +405,7 @@
     Matcher.prototype.fail = function(offset, line) {
       this.matches.matchSummary.failed++;
       this.matches.matchSummary.total++;
-      return this.matches[offset.toString()] = [offset, line.length, 'match-fail'];
+      return this.matches[offset.toString()] = [offset, line.length, 'nomatch'];
     };
 
     return Matcher;
@@ -517,6 +517,8 @@
 
     Refiddle.prototype.literalRegex = /^\/[^\/]+\/\w*/m;
 
+    Refiddle.prototype.debounceRate = 250;
+
     Refiddle.prototype.events = {
       "click .save": function(e) {
         e.preventDefault();
@@ -535,7 +537,11 @@
           return this.regexEditor.setValue("/" + pattern.pattern + "/" + (pattern.options.replace(option, '')));
         }
       },
-      "change #refiddle_flavor": "chooseFlavor"
+      "change #refiddle_flavor": function() {
+        this.chooseFlavor();
+        this.updateMatches();
+        return this.updateReplacement();
+      }
     };
 
     Refiddle.prototype.initialize = function(options) {
@@ -632,14 +638,32 @@
     };
 
     Refiddle.prototype.updateMatches = function() {
+      this.updateMatchesDebounced || (this.updateMatchesDebounced = _.debounce(this._updateMatches, this.debounceRate, true));
+      return this.updateMatchesDebounced();
+    };
+
+    Refiddle.prototype._updateMatches = function() {
       var pattern,
         _this = this;
       pattern = this.getPattern();
       this.applyOptions(pattern.options);
-      return this.flavor.match(pattern, this.getCorpus(), function(matches) {
-        _this.matches = matches;
-        return _this.highlightMatches(_this.matches);
-      });
+      if (this.refreshingCorpus) {
+        return this.refreshCorpus = true;
+      } else {
+        this.refreshingCorpus = true;
+        this.refreshCorpus = false;
+        $("#corpus").addClass("refreshing");
+        console.log("Running on server...");
+        return this.flavor.match(pattern, this.getCorpus(), function(matches) {
+          $("#corpus").removeClass("refreshing");
+          _this.refreshingCorpus = false;
+          _this.matches = matches;
+          _this.highlightMatches(_this.matches);
+          if (_this.refreshCorpus) {
+            return _this.updateMatches();
+          }
+        });
+      }
     };
 
     Refiddle.prototype.highlightMatches = function(matches) {
@@ -674,14 +698,29 @@
     };
 
     Refiddle.prototype.updateReplacement = function() {
+      this.updateReplacementDebounced || (this.updateReplacementDebounced = _.debounce(this._updateReplacement, this.debounceRate, true));
+      return this.updateReplacementDebounced();
+    };
+
+    Refiddle.prototype._updateReplacement = function() {
       var _this = this;
-      return this.flavor.replace(this.getPattern(), this.getCorpus(), this.getReplacement(), function(replacement) {
-        return _this.replaceResults.text(replacement.replace);
-      });
+      if (this.refreshingReplacement) {
+        return this.refreshReplacement;
+      } else {
+        this.refreshReplacement = false;
+        this.refreshingReplacement = true;
+        return this.flavor.replace(this.getPattern(), this.getCorpus(), this.getReplacement(), function(replacement) {
+          _this.refreshingReplacement = false;
+          _this.replaceResults.text(replacement.replace);
+          if (_this.refreshReplacement) {
+            return _this.updateReplacement();
+          }
+        });
+      }
     };
 
     Refiddle.prototype.resizeTextGroup = function() {
-      this.resizeTextGroupDebounced || (this.resizeTextGroupDebounced = _.debounce(this._resizeTextGroup, 50, true));
+      this.resizeTextGroupDebounced || (this.resizeTextGroupDebounced = _.debounce(this._resizeTextGroup, this.debounceRate, true));
       return this.resizeTextGroupDebounced();
     };
 

@@ -103,7 +103,7 @@ class Matcher
   fail: ( offset, line ) ->
     @matches.matchSummary.failed++
     @matches.matchSummary.total++
-    @matches[offset.toString()] = [ offset, line.length, 'match-fail' ]
+    @matches[offset.toString()] = [ offset, line.length, 'nomatch' ]
 
 
 class PositiveMatcher extends Matcher
