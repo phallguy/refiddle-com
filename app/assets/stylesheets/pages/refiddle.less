@@ -108,4 +108,60 @@
     font-size: @font-size-small;
     padding: @padding-base-vertical * 2 @padding-base-horizontal;
   }
+
+  .match-results
+  {
+    .label
+    {
+      margin-left: 4px;
+    }
+  }
+
+
+}
+
+.match-results
+{
+  .pass, .fail
+  {
+    display: none;
+  }
+}
+
+.with-tests
+{
+  .match-results
+  {
+    .pass, .fail
+    {
+      display: inline;
+    }
+    .total
+    {
+      display: none;
+    }
+  }
+
+  &.tests-failing
+  {
+    #refiddle_regex, #refiddle_regex + .CodeMirror
+    {
+      border-color: @brand-danger;
+    }
+  }
+
+  &.tests-passing
+  {
+    #refiddle_regex, #refiddle_regex + .CodeMirror
+    {
+      border-color: @brand-success;
+    }
+    .match-results
+    {
+      .fail
+      {
+        display: none;
+      }
+    }
+  }
 }

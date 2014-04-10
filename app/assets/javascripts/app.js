@@ -516,6 +516,7 @@
 
     Refiddle.prototype.highlightMatches = function(matches) {
       var from, index, pair, to;
+      this.updateMatchResults(matches);
       _.each(this.corpusEditor.getAllMarks(), function(m) {
         return m.clear();
       });
@@ -531,6 +532,17 @@
         });
       }
       return void 0;
+    };
+
+    Refiddle.prototype.updateMatchResults = function(matches) {
+      var summary;
+      summary = matches.matchSummary;
+      $("html").toggleClass("with-tests", summary.tests);
+      $("html").toggleClass("tests-passing", summary.failed === 0);
+      $("html").toggleClass("tests-failing", summary.failed > 0);
+      $(".match-results .total .count").text(summary.total);
+      $(".match-results .pass .count").text(summary.passed);
+      return $(".match-results .fail .count").text(summary.failed);
     };
 
     Refiddle.prototype.resizeTextGroup = function() {

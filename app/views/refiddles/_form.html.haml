@@ -17,9 +17,16 @@
         .panel.panel-default><
           .panel-heading
             .pull-right
-              .label.label-default 0 Matches
-              .label.label-success 1 PASSING
-              .label.label-danger 2 FAILING
+              .match-results
+                .label.label-default.total 
+                  %span.count
+                  Matches
+                .label.label-success.pass
+                  %span.count
+                  Passing
+                .label.label-danger.fail
+                  %span.count
+                  Failing
             = link_to "Corpus", "#corpus", data: { toggle: "collapse", parent: "#text" }
 
           #corpus.panel-collapse.collapse.in

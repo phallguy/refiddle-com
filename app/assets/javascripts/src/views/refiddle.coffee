@@ -79,6 +79,8 @@ class App.Views.Refiddle extends Backbone.View
     @highlightMatches( @matches )
 
   highlightMatches: (matches) =>
+    @updateMatchResults( matches )
+
     _.each @corpusEditor.getAllMarks(), (m) ->
       m.clear()
 
@@ -89,6 +91,18 @@ class App.Views.Refiddle extends Backbone.View
 
       @corpusEditor.markText( from, to, className: pair[2] || "match" )
     undefined
+
+  updateMatchResults: (matches) ->
+    summary = matches.matchSummary
+
+    $("html").toggleClass( "with-tests", summary.tests )
+    $("html").toggleClass( "tests-passing", summary.failed == 0 )
+    $("html").toggleClass( "tests-failing", summary.failed > 0 )
+
+    $(".match-results .total .count").text( summary.total )
+    $(".match-results .pass .count").text( summary.passed )
+    $(".match-results .fail .count").text( summary.failed )
+
 
 
   resizeTextGroup: =>
