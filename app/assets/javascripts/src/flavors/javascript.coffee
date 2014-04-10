@@ -1,8 +1,20 @@
 class Flavors.JavaScript
 
+  replace: ( pattern, corpus, replacement, callback ) ->
+    if replacement == null || replace.length == 0
+      return callback( replace: corpus )
+
+    if regex = @makeRegex( pattern )
+      if @isCorpusTest( corpus )
+        lines = corpus.split('\n')
+        mapped = for line in lines
+          line = line.replace( regex, replacement )
+        callback( replace: mapped.join("\n") )
+      else
+        callback( replace: corpus.replace( regex, replacement ) )
 
 
-  match: ( pattern, corpus ) ->
+  match: ( pattern, corpus, callback ) ->
     matches =
       matchSummary:
         failed: 0
@@ -18,7 +30,7 @@ class Flavors.JavaScript
     else
       @matchWholeCorpus( regex, corpus, matches )
 
-    matches
+    callback( matches )
 
 
   makeRegex: (pattern) ->

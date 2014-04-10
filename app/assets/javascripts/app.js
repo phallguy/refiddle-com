@@ -232,7 +232,37 @@
   Flavors.JavaScript = (function() {
     function JavaScript() {}
 
-    JavaScript.prototype.match = function(pattern, corpus) {
+    JavaScript.prototype.replace = function(pattern, corpus, replacement, callback) {
+      var line, lines, mapped, regex;
+      if (replacement === null || replace.length === 0) {
+        return callback({
+          replace: corpus
+        });
+      }
+      if (regex = this.makeRegex(pattern)) {
+        if (this.isCorpusTest(corpus)) {
+          lines = corpus.split('\n');
+          mapped = (function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = lines.length; _i < _len; _i++) {
+              line = lines[_i];
+              _results.push(line = line.replace(regex, replacement));
+            }
+            return _results;
+          })();
+          return callback({
+            replace: mapped.join("\n")
+          });
+        } else {
+          return callback({
+            replace: corpus.replace(regex, replacement)
+          });
+        }
+      }
+    };
+
+    JavaScript.prototype.match = function(pattern, corpus, callback) {
       var matches, regex;
       matches = {
         matchSummary: {
@@ -250,7 +280,7 @@
       } else {
         this.matchWholeCorpus(regex, corpus, matches);
       }
-      return matches;
+      return callback(matches);
     };
 
     JavaScript.prototype.makeRegex = function(pattern) {
@@ -429,6 +459,7 @@
 
     function Refiddle() {
       this.resizeTextGroup = __bind(this.resizeTextGroup, this);
+      this.updateReplacement = __bind(this.updateReplacement, this);
       this.highlightMatches = __bind(this.highlightMatches, this);
       this.updateMatches = __bind(this.updateMatches, this);
       _ref2 = Refiddle.__super__.constructor.apply(this, arguments);
@@ -466,6 +497,7 @@
       });
       this.regexEditor.on("viewportChange", this.resizeTextGroup);
       this.regexEditor.on("changes", this.updateMatches);
+      this.regexEditor.on("changes", this.updateReplacement);
       this.corpusEditor = CodeMirror.fromTextArea(this.corpusText[0], {
         lineWrapping: true,
         lineNumbers: true,
@@ -477,10 +509,12 @@
       });
       this.replaceEditor.on("viewportChange", this.resizeTextGroup);
       this.replaceEditor.refresh();
+      this.replaceEditor.on("changes", this.updateReplacement);
       this.resizeTextGroup();
       this.textGroup.find(".in").removeClass("in");
-      this.textGroup.find(".panel-collapse:first").addClass("in");
-      return this.updateMatches();
+      this.textGroup.find(".panel-collapse:last").addClass("in");
+      this.updateMatches();
+      return this.updateReplacement();
     };
 
     Refiddle.prototype.getPattern = function() {
@@ -509,9 +543,16 @@
       return this.corpusEditor.getValue();
     };
 
+    Refiddle.prototype.getReplacement = function() {
+      return this.replaceEditor.getValue();
+    };
+
     Refiddle.prototype.updateMatches = function() {
-      this.matches = this.flavor.match(this.getPattern(), this.getCorpus());
-      return this.highlightMatches(this.matches);
+      var _this = this;
+      return this.flavor.match(this.getPattern(), this.getCorpus(), function(matches) {
+        _this.matches = matches;
+        return _this.highlightMatches(_this.matches);
+      });
     };
 
     Refiddle.prototype.highlightMatches = function(matches) {
@@ -545,6 +586,13 @@
       return $(".match-results .fail .count").text(summary.failed);
     };
 
+    Refiddle.prototype.updateReplacement = function() {
+      var _this = this;
+      return this.flavor.replace(this.getPattern(), this.getCorpus(), this.getReplacement(), function(replacement) {
+        return _this.replaceResults.text(replacement.replace);
+      });
+    };
+
     Refiddle.prototype.resizeTextGroup = function() {
       this.resizeTextGroupDebounced || (this.resizeTextGroupDebounced = _.debounce(this._resizeTextGroup, 50, true));
       return this.resizeTextGroupDebounced();
@@ -556,7 +604,7 @@
         availableHeight = $(window).height() - this.textGroup.offset().top - 15;
         this.corpusEditor.setSize(null, availableHeight - this.headerHeight * 2 - 5 - 5);
         return this.replaceResults.css({
-          height: availableHeight - this.replaceText.outerHeight() - this.headerHeight * 2 - 5 - 5
+          height: availableHeight - $(this.replaceEditor.display.wrapper).outerHeight() - this.headerHeight * 2 - 5 - 5
         });
       } else {
         this.corpusEditor.setSize(null, "");

@@ -28,6 +28,7 @@ class App.Views.Refiddle extends Backbone.View
       mode: "regex"      
     @regexEditor.on "viewportChange", @resizeTextGroup
     @regexEditor.on "changes", @updateMatches
+    @regexEditor.on "changes", @updateReplacement
 
     @corpusEditor = CodeMirror.fromTextArea @corpusText[0],
       lineWrapping: true
@@ -39,15 +40,17 @@ class App.Views.Refiddle extends Backbone.View
       mode: "regex_replace"
     @replaceEditor.on "viewportChange", @resizeTextGroup
     @replaceEditor.refresh()
+    @replaceEditor.on "changes", @updateReplacement
 
 
     @resizeTextGroup()
 
     # Need to do this so CodeMirror can initialize on the replace text box.
     @textGroup.find(".in").removeClass("in")
-    @textGroup.find(".panel-collapse:first").addClass("in")
+    @textGroup.find(".panel-collapse:last").addClass("in")
 
     @updateMatches()
+    @updateReplacement()
 
 
   getPattern: ->
@@ -74,9 +77,13 @@ class App.Views.Refiddle extends Backbone.View
   getCorpus: ->
     @corpusEditor.getValue()
 
+  getReplacement: ->
+    @replaceEditor.getValue()
+
   updateMatches: =>
-    @matches = @flavor.match( @getPattern(), @getCorpus() )
-    @highlightMatches( @matches )
+    @flavor.match @getPattern(), @getCorpus(), (matches) =>
+      @matches = matches
+      @highlightMatches( @matches )
 
   highlightMatches: (matches) =>
     @updateMatchResults( matches )
@@ -104,6 +111,9 @@ class App.Views.Refiddle extends Backbone.View
     $(".match-results .fail .count").text( summary.failed )
 
 
+  updateReplacement: =>
+    @flavor.replace @getPattern(), @getCorpus(), @getReplacement(), (replacement) =>
+      @replaceResults.text( replacement.replace )
 
   resizeTextGroup: =>
     @resizeTextGroupDebounced ||= _.debounce @_resizeTextGroup, 50, true
@@ -114,7 +124,7 @@ class App.Views.Refiddle extends Backbone.View
       availableHeight = $(window).height() - @textGroup.offset().top - 15 # grid gutter
 
       @corpusEditor.setSize( null, availableHeight - @headerHeight * 2 - 5 - 5 )
-      @replaceResults.css( height: availableHeight - @replaceText.outerHeight() - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
+      @replaceResults.css( height: availableHeight - $( @replaceEditor.display.wrapper ).outerHeight() - @headerHeight * 2 - 5 - 5 ) # ( panel margin ) ( border width * 5 borders )
     else
       @corpusEditor.setSize( null, "" )
       @replaceResults.css( height: "" )
