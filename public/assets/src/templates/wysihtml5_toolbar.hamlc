@@ -1,0 +1,30 @@
+.wysihtml5-toolbar-container{ unselectable: "on" }
+  .wysihtml5-toolbar{ unselectable: "on" }
+    .select
+      %button.dropdown-toggle{ data: { toggle: "dropdown" }, unselectable: "on" }
+        %i.glyphicon.glyphicon-font
+        %span.caret
+      %ul.dropdown-menu{ role: "menu", unselectable: "on" }
+        %li
+          %a{ "data-wysihtml5-command" => "formatBlock", "data-wysihtml5-command-value" => "p", unselectable: "on" } Normal
+        %li
+          %a{ "data-wysihtml5-command" => "formatBlock", "data-wysihtml5-command-value" => "h3", unselectable: "on" } Heading 3
+        %li
+          %a{ "data-wysihtml5-command" => "formatBlock", "data-wysihtml5-command-value" => "h4", unselectable: "on" } Heading 4
+
+    %a{ "data-wysihtml5-command" => "bold", unselectable: "on" }
+      %i.glyphicon.glyphicon-bold
+    %a{ "data-wysihtml5-command" => "italic", unselectable: "on" }
+      %i.glyphicon.glyphicon-italic
+    %a{ "data-wysihtml5-command" => "strike", unselectable: "on" }
+      %i.glyphicon.glyphicon-strikethrough
+    .separator
+    %a{ "data-wysihtml5-command" => "insertUnorderedList", unselectable: "on" }
+      %i.glyphicon.glyphicon-list-ul
+    %a{ "data-wysihtml5-command" => "insertOrderedList", unselectable: "on" }
+      %i.glyphicon.glyphicon-list-ol
+    .separator
+    %a{ "data-wysihtml5-command" => "Indent", unselectable: "on" }
+      %i.glyphicon.glyphicon-indent
+    %a{ "data-wysihtml5-command" => "Outdent", unselectable: "on" }
+      %i.glyphicon.glyphicon-outdent
