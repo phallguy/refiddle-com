@@ -56,9 +56,8 @@ GIT
       capistrano-fanfare
       rvm-capistrano
 
-GIT
-  remote: git@github.com:phallguy/rapped.git
-  revision: ae319b9a41dd1b2724f5a3b8cf2edbb688668fa8
+PATH
+  remote: ~/Projects/phallguy/rapped
   specs:
     rapped (0.0.2)
       cancan
@@ -104,7 +103,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     arel (4.0.2)
-    atomic (1.1.16)
     awesome_print (1.2.0)
     bson (2.2.2)
     builder (3.1.4)
@@ -334,7 +332,7 @@ GEM
     spring (1.1.2)
     spring-commands-rspec (1.0.1)
       spring (>= 0.9.1)
-    sprockets (2.11.0)
+    sprockets (2.12.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
@@ -349,8 +347,7 @@ GEM
       libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
-    thread_safe (0.3.1)
-      atomic (>= 1.1.7, < 2)
+    thread_safe (0.3.3)
     tilt (1.4.1)
     timecop (0.7.1)
     timers (1.1.0)

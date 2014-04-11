@@ -1,0 +1,63 @@
+error_log /var/log/nginx/error.log;
+pid /var/run/nginx.pid;
+
+worker_processes <%= nginx_worker_processes %>;
+user www-data www-data;
+
+events {
+  accept_mutex on; # "on" if nginx worker_processes > 1
+  multi_accept on;
+  use epoll;
+  worker_connections 10240;
+}
+
+http {
+  access_log /var/log/nginx/access.log combined;
+
+  log_format cache '***$time_local '
+    '$upstream_cache_status '
+    'Cache-Control: $upstream_http_cache_control '
+    'Expires: $upstream_http_expires '
+    '$host '
+    '"$request" ($status) '
+    '"$http_user_agent" '
+    'Args: $args ';
+  access_log /var/log/nginx/cache.log cache;
+
+  include mime.types;
+  default_type application/octet-stream;
+
+  sendfile on;
+
+  tcp_nopush on; # off may be better for *some* Comet/long-poll stuff
+  tcp_nodelay off; # on may be better for some Comet/long-poll stuff
+
+  gzip on;
+  gzip_http_version 1.0;
+  gzip_proxied any;
+  gzip_min_length 500;
+  gzip_disable "MSIE [1-6]\.";
+
+  # text/html is always compressed, no need to include it.
+  gzip_types text/plain text/xml text/css
+             text/comma-separated-values
+             text/javascript application/x-javascript
+             application/json
+             application/atom+xml;
+
+
+  ssl_session_cache     shared:SSL:5m;
+  ssl_session_timeout   5m;
+  ssl_protocols         SSLv3 TLSv1;
+
+  types_hash_max_size 2048;
+  server_names_hash_bucket_size 64;
+
+  open_file_cache           max=1000 inactive=20s;
+  open_file_cache_valid     30s;
+  open_file_cache_min_uses  2;
+  open_file_cache_errors    on;
+
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+}
