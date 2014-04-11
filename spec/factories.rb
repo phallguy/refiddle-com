@@ -24,6 +24,7 @@ FactoryGirl.define do
 
   factory :refiddle_pattern do
     regex "/./"    
+    corpus_text "corpus"
   end
 
   factory :refiddle do

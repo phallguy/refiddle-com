@@ -12,7 +12,7 @@ User.create( name: "Example" ) unless User.where( name: "Example" ).first
 example_user = User.find( "example" )
 
 unless test_sample = example_user.refiddles.where( slug: "red-green-corpus-test" ).first
-  example_user.refiddles.create! title: "Red Green Corpus Test", regex: "/m.* mouse/gi", tags: "test,example", corpus_text: <<-eos
+  example_user.refiddles.create! title: "Red Green Corpus Test", regex: "/m.* mouse/gi", tags: "test,example", locked: true, share: true, corpus_text: <<-eos
 Corpus tests allow you to unit test your regular expressions using a typical red => green development flow.
 
 Test sections are marked indicating if the following lines should (#+) or should not (#-) match the regex pattern. Blank lines are ignored.    

@@ -2,7 +2,7 @@ class RefiddlePattern
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  LITERALEXP_PATTERN = /\A\/(?<source>[^\/]+)\/(?<options>\w*)\z/m;
+  LITERALEXP_PATTERN = /\A\/(?<source>.+)\/(?<options>\w*)\z/m;
 
   # @!attribute
   # @return [Refiddle] that the pattern belongs to.
@@ -11,11 +11,11 @@ class RefiddlePattern
     # @!attribute
   # @return [String] the actual regex pattern
   field :regex, type: String
-    validates :regex, format: LITERALEXP_PATTERN
 
   # @!attribute
   # @return [String] corupus of text to test the {#regex} against.
   field :corpus_text, type: String
+    validates_presence_of :corpus_text
 
   # @!attribute
   # @return [String] the pattern to use when replacing matches from {#corpus_text} against {#regex}.
@@ -53,8 +53,8 @@ class RefiddlePattern
 
       expander = Expander.new
 
-      left = original.scan(WORD_SPLIT_PATTERN)
-      right = modified.scan(WORD_SPLIT_PATTERN)
+      left = ( original && original.scan(WORD_SPLIT_PATTERN) ) || []
+      right = ( modified && modified.scan(WORD_SPLIT_PATTERN) ) || []
 
       Diff::LCS.traverse_sequences( left, right, expander )      
 

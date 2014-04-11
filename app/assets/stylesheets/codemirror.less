@@ -1,0 +1,58 @@
+@import 'codemirror/lib/codemirror.css';
+
+.CodeMirror
+{
+  font-family: @font-family-monospace;
+  font-size: @font-size-small;
+  line-height: 1.6;
+}
+
+.CodeMirror pre
+{
+  padding: 0 @padding-base-horizontal;
+}
+
+.CodeMirror-lines
+{
+  padding: @padding-base-vertical * 2 0;
+}
+
+.CodeMirror-gutters
+{
+  border-right: 0;
+  background: transparent;  
+}
+
+.CodeMirror-linenumber
+{
+  color: mix( @input-bg, @text-muted );
+}
+
+.CodeMirror div.CodeMirror-cursors
+{
+  z-index: 1000;
+}
+
+.cm-s-default
+{
+  .cm-comment   { color: @text-muted; }
+  .cm-operator, .cm-atom  { color: #B4305B; }
+  .cm-header    { font-weight: bold; color: inherit; }
+  .cm-bracket   { color: #50BA5E; }
+  .cm-meta      { color: #99CD32; }
+  .cm-string    { color: #555;    }
+  .cm-tag       { color: #ED9050; }
+  .cm-qualifier { color: #CCC;    }
+  .cm-attribute { color: #DDD;    }
+  .cm-quote     { color: #EFBA6B;    }
+}
+
+.CodeMirror-focused .CodeMirror-selected, ::selection
+{
+  background: @select-bg;
+}
+
+.CodeMirror-selected
+{ 
+  background: mix( @input-bg, @select-bg );
+}

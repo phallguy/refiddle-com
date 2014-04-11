@@ -1,8 +1,14 @@
-- title "Users"
+%h1.page-title= title "Users"
+
+%p
+  %small.text-muted= page_entries_info @users
+
 
 %table.table
   %tr
-    %th User
+    %th Name
   - @users.each do |user|
     %tr
       %td= link_to user.name, user
+
+= paginate @users

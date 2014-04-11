@@ -74,4 +74,115 @@
       border-radius: 0;
     }
   }
+
+  #refiddle_regex + .CodeMirror
+  {
+    .CodeMirror-scroll
+    {
+      max-height: 300px;
+    }
+  }
+ 
+  #refiddle_regex, #refiddle_regex + .CodeMirror, #refiddle_replace_text, #refiddle_replace_text + .CodeMirror
+  {
+    font-size: 20px;
+    font-family: @font-family-monospace;
+    color: @input-color;
+    vertical-align: middle;
+    background-color: @input-bg;
+    background-image: none;
+    border: 1px solid @input-border;
+    border-radius: @input-border-radius;
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    padding: @padding-base-vertical  @padding-base-horizontal;
+    height: auto;
+  }
+
+  #refiddle_replace_text, #refiddle_replace_text + .CodeMirror
+  {
+    border: 0;
+  }
+
+  #replace_results{
+    font-family: @font-family-monospace;
+    font-size: @font-size-small;
+    padding: @padding-base-vertical * 2 @padding-base-horizontal;
+  }
+
+  .match-results
+  {
+    .label
+    {
+      margin-left: 4px;
+    }
+  }
+
+  #text .panel-body
+  {
+    position: relative;
+  }
+
+  .glyphicon-refresh
+  {    
+    display: none;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    color: @state-info-text;
+  }
+
+  .refreshing
+  {
+    .glyphicon-refresh
+    {
+      display: inline-block;
+    }
+  }
+}
+
+.match-results
+{
+  .pass, .fail
+  {
+    display: none;
+  }
+}
+
+.with-tests
+{
+  .match-results
+  {
+    .pass, .fail
+    {
+      display: inline;
+    }
+    .total
+    {
+      display: none;
+    }
+  }
+
+  &.tests-failing
+  {
+    #refiddle_regex, #refiddle_regex + .CodeMirror
+    {
+      border-color: @brand-danger;
+    }
+  }
+
+  &.tests-passing
+  {
+    #refiddle_regex, #refiddle_regex + .CodeMirror
+    {
+      border-color: @brand-success;
+    }
+    .match-results
+    {
+      .fail
+      {
+        display: none;
+      }
+    }
+  }
 }

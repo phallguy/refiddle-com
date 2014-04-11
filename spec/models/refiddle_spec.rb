@@ -30,12 +30,28 @@ describe Refiddle do
       build(:refiddle, locked: true).should_not be_valid
     end
 
-    [ "http://xheo.com", "redit.com", "file://c://aa", "https:/192.168.1.1", "<a href=\"image\">", "<link rel=custom>" ].each do |url|
+    [ "http://xheo.com", "file://c://aa", "https:/192.168.1.1", "<a href=\"image\">", "<link rel=custom>" ].each do |url|
       %w{ corpus_text replace_text title description }.each do |field|
         it "can't share urls like #{url} in #{field}" do
           build(:refiddle, field => url, share: true ).should_not be_valid
         end
       end
+    end
+
+    it "doesn't accept number like tags" do
+      build( :refiddle, tags: "123" ).should_not be_valid
+    end
+
+    it "doesn't accept number like tags" do
+      build( :refiddle, tags: "-123" ).should_not be_valid
+    end
+
+    it "doesn't accept mixed case spammy tags" do
+      build( :refiddle, tags: "FBYETXsvMJ" ).should_not be_valid
+    end
+
+    it "accepts camel case tags" do
+      build( :refiddle, tags: "CamelCase" ).should be_valid
     end
 
     %w{ corpus_text replace_text title description }.each do |field|

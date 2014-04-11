@@ -39,7 +39,7 @@ class RefiddlesController < ApplicationController
     @refiddle.commit! if @refiddle.pattern_will_change?(refiddle_params) && ! params[:autosave].to_bool
     @refiddle.write_attributes refiddle_params
 
-    render_modified_response @refiddle do
+    render_modified_response @refiddle, view: :show do
     end
   end
 

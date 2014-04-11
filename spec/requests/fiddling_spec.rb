@@ -10,7 +10,7 @@ describe "Fiddling" do
   end
 
   it "creates a new fiddle" do
-    post "/refiddles", refiddle: { pattern_attributes: { regex: "/test/" } }
+    post "/refiddles", refiddle: { pattern_attributes: { regex: "/test/", corpus_text: "corpus" } }
 
     expect(response).to redirect_to(assigns(:refiddle))
     follow_redirect!
@@ -19,7 +19,7 @@ describe "Fiddling" do
   end
 
   it "updates an existing fiddle and commits the change" do
-    fiddle = create(:refiddle, pattern: { regex: "/test/" }, user: owner )
+    fiddle = create(:refiddle, pattern: { regex: "/test/", corpus_text: "corpus" }, user: owner )
     login owner
 
     Refiddle.any_instance.should_receive(:commit!)
@@ -29,7 +29,7 @@ describe "Fiddling" do
   end
 
   it "updates an existing fiddle but does not commit for auto save" do
-    fiddle = create(:refiddle, pattern: { regex: "/test/" }, user: owner )
+    fiddle = create(:refiddle, pattern: { regex: "/test/", corpus_text: "corpus" }, user: owner )
     login owner
 
     Refiddle.any_instance.should_not_receive(:commit!)
@@ -39,7 +39,7 @@ describe "Fiddling" do
   end
 
   it "updates if not locked and edited by another user" do
-    fiddle = create(:refiddle, pattern: { regex: "/test/" }, user: owner )
+    fiddle = create(:refiddle, pattern: { regex: "/test/", corpus_text: "corpus" }, user: owner )
     login visitor
 
     Refiddle.any_instance.should_receive(:commit!)
@@ -51,7 +51,7 @@ describe "Fiddling" do
   end
 
   it "forks if locked and edited by another user" do
-    fiddle = create(:refiddle, pattern: { regex: "/test/" }, user: owner, locked: true )
+    fiddle = create(:refiddle, pattern: { regex: "/test/", corpus_text: "corpus" }, user: owner, locked: true )
     login visitor
 
     Refiddle.any_instance.should_receive(:fork!).and_call_original

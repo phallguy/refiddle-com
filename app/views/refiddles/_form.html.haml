@@ -10,25 +10,36 @@
 
     #main-content
       = render "error_list", model: refiddle
+      = render "error_list", model: refiddle.pattern
       .form-group
         = f.text_field :regex, class: "form-control"
       #text.panel-group        
         .panel.panel-default><
           .panel-heading
             .pull-right
-              .label.label-default 0 Matches
-              .label.label-success 1 PASSING
-              .label.label-danger 2 FAILING
+              .match-results
+                .label.label-default.total 
+                  %span.count
+                  Matches
+                .label.label-success.pass
+                  %span.count
+                  Passing
+                .label.label-danger.fail
+                  %span.count
+                  Failing
             = link_to "Corpus", "#corpus", data: { toggle: "collapse", parent: "#text" }
 
           #corpus.panel-collapse.collapse.in
             .panel-body
+              = icon :refresh, :spin
               = f.text_area :corpus_text, class: "form-control", rows: 6
 
         .panel.panel-default><
-          .panel-heading= link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
-          #replace.panel-collapse.collapse
+          .panel-heading
+            = link_to "Replace", "#replace", data: { toggle: "collapse", parent: "#text" }
+          #replace.panel-collapse.collapse.in
             .panel-body
+              = icon :refresh, :spin
               .form-group
                 = f.text_field :replace_text, class: "form-control"
               .form-group
@@ -43,6 +54,8 @@
       = render "pre_asside"
       = render "refiddles/asside", refiddle: refiddle, f: f
 
+      - if can?(:delete,refiddle) && ! refiddle.new_record?
+        %p= button_to "Delete", refiddle_path(refiddle), method: :delete, class: "btn btn-danger"
 
 - content_for :page_actions do
   .btn-group.navbar-left

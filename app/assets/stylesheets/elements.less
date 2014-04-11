@@ -64,6 +64,9 @@
   .refiddle-corpus
   {
     margin: @padding-base-horizontal 0;
+    max-height: 300px;
+    overflow: hidden;
+    white-space: pre-wrap;
   }
 }
 
@@ -106,6 +109,31 @@
   background: @state-success-bg;
   color: @state-success-text; 
 }
+
+.match, .nomatch
+{
+  background: @state-success-bg;
+  color: @state-success-text;
+  padding: 2px 1px;
+  margin: -2px -1px;
+}
+
+.match + .match:nth-child(even)
+{
+  background: lighten( @state-success-bg, 5% );
+}
+
+.nomatch
+{
+  background: @state-danger-bg;
+  color: @state-danger-text;
+}
+
+.nomatch + .nomatch:nth-child(even)
+{
+  background: lighten( @state-danger-bg, 5% );
+}
+
 
 .btn-stackoverflow
 {

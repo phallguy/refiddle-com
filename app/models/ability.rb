@@ -23,7 +23,8 @@ class Ability < Rapped::Ability
     end
 
     can [:update,:read], user
-    can [:update], Refiddle, user: user
+    can [:update,:share], Refiddle, user: user
+    can [:update], Refiddle, locked: false, share: true
 
     user.roles && user.roles.each{|r| send r if respond_to? r}   
 
@@ -32,7 +33,7 @@ class Ability < Rapped::Ability
 
   def anonymous
     can [:read,:new,:create,:fork], Refiddle, share: true
-    can [:update], Refiddle, locked: false
+    # can [:update], Refiddle, locked: false, share: true
   end
 
   def staff
