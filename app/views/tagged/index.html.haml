@@ -8,6 +8,10 @@
 
 - content_for :asside do
   %h4 Tags
-  %ul.tag-cloud
-    - @tags.each do |tag|
-      %li><= link_to tag, tagged_path(tag)
+  %p 
+    %ul.tag-cloud
+      - @tags.each do |tag|
+        %li><= link_to tag, tagged_path(tag)
+
+  %p
+    %small.text-muted= page_entries_info @refiddles

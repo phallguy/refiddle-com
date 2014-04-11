@@ -10,6 +10,7 @@ class Refiddle
   validate :no_urls_when_shared
   validate :not_unchanged_sample
   validate :not_unchanged_fork
+  validate :not_spam
 
   honey_pot :email
 
@@ -190,15 +191,16 @@ class Refiddle
     URL_PATTERN = /\w+\.[a-z]{2,}/i
     PROTOCOL_PATTERN = /[a-z]+:\/\/?\w+/i
     LINK_PATTERN = /href|src|rel=/i
+    STACKOVERFLOW_PATTERN = /https?:\/\/stackoverflow.com/i
     SAMPLE_ATTRS = { regex: "/k[^\\s]*s/g", corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.", replace_text: "tacos" }.freeze
 
     def validate_no_url(field)
       val = send(field)
-      errors.add field, "may not include url or link like text when shared" if PROTOCOL_PATTERN =~ val || URL_PATTERN =~ val || LINK_PATTERN =~ val
+      errors.add field, "may not include url or link like text unless you are signed in" if ( PROTOCOL_PATTERN =~ val || LINK_PATTERN =~ val ) && STACKOVERFLOW_PATTERN !~ val
     end
 
     def no_urls_when_shared
-      if share
+      if share && ! user
         %w{ title description corpus_text replace_text }.each do |field|
           validate_no_url(field)
         end
@@ -227,6 +229,16 @@ class Refiddle
         break unless SHORT_CODE_BLACKLIST.include?(code)
       end 
       code
+    end
+
+    def not_spam
+      if ( title && title == description ) || regex == corpus_text || "/#{regex}/" == corpus_text || corpus_text == replace_text ||
+        ( description && corpus_text.include?(description) )
+        errors.add :base, "Something doesn't look quite right" 
+      end
+      if tags.present? && tags.any?{|t| /^[+-]?\d+$/ =~ t  || /[A-Z]{2,}[a-z]+[A-Z]{2,}/ =~ t }
+        errors.add :base, "Something doesn't look quite right" 
+      end
     end
 
 

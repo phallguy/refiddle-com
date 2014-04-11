@@ -11,11 +11,11 @@ class RefiddlePattern
     # @!attribute
   # @return [String] the actual regex pattern
   field :regex, type: String
-    validates :regex, format: LITERALEXP_PATTERN
 
   # @!attribute
   # @return [String] corupus of text to test the {#regex} against.
   field :corpus_text, type: String
+    validates_presence_of :corpus_text
 
   # @!attribute
   # @return [String] the pattern to use when replacing matches from {#corpus_text} against {#regex}.

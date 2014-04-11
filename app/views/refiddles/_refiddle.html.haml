@@ -15,7 +15,7 @@
           .label.label-default=tag
   .refiddle-regex= refiddle.regex
   .refiddle-description!= refiddle.description
-  .refiddle-corpus!= refiddle.corpus_text.gsub( /\n/, "<br />" )
+  .refiddle-corpus= refiddle.corpus_text
   .refiddle-actions
     = link_to "Open", refiddle_path(refiddle), class: "btn btn-default"
     = link_to "Fork", refiddle_path(refiddle,fork: true), class: "btn btn-default"
