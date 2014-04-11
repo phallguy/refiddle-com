@@ -56,8 +56,9 @@ GIT
       capistrano-fanfare
       rvm-capistrano
 
-PATH
-  remote: ~/Projects/phallguy/rapped
+GIT
+  remote: git@github.com:phallguy/rapped.git
+  revision: ae319b9a41dd1b2724f5a3b8cf2edbb688668fa8
   specs:
     rapped (0.0.2)
       cancan
@@ -243,7 +244,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
-    oj (2.6.1)
+    oj (2.7.3)
     omniauth (1.2.1)
       hashie (>= 1.2, < 3)
       rack (~> 1.0)
@@ -268,7 +269,7 @@ GEM
       omniauth-oauth (~> 1.0)
     optionable (0.2.0)
     origin (2.1.1)
-    phony (2.2.3)
+    phony (2.2.4)
     phony_rails (0.6.1)
       activesupport (>= 3.0)
       countries (>= 0.8.2)

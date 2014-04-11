@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.0.4'
 
-gem 'rapped', path: "~/Projects/phallguy/rapped"
-# gem 'rapped', git: "git@github.com:phallguy/rapped.git"
+# gem 'rapped', path: "~/Projects/phallguy/rapped"
+gem 'rapped', git: "git@github.com:phallguy/rapped.git"
 
 gem 'jquery-rails'
 gem 'less-rails'
