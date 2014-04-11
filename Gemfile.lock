@@ -56,8 +56,9 @@ GIT
       capistrano-fanfare
       rvm-capistrano
 
-PATH
-  remote: ~/Projects/phallguy/rapped
+GIT
+  remote: git@github.com:phallguy/rapped.git
+  revision: 9837b5b8ff933d82307eb4c8b155b46cd9b1a143
   specs:
     rapped (0.0.2)
       cancan
