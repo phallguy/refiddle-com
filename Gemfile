@@ -27,6 +27,7 @@ gem 'cancan'
 gem 'dalli'
 gem 'diff-lcs'
 gem 'nokogiri'
+gem 'analytics-ruby', '~>1.0'
 
 group :development, :test do
   gem 'awesome_print', :require => false

@@ -1,5 +1,5 @@
 set( :setting_prompts, {
-  segmentio_api_key: "Segment IO API Key: ",
+  segmentio_secret: "Segment IO Secret: ",
   facebook_secret: "Facebook Secret: ",
   twitter_secret: "Twitter Secret: ",
   aws_key: "AWS Key: ",
