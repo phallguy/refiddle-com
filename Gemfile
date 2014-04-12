@@ -26,6 +26,7 @@ gem 'kaminari'
 gem 'cancan'
 gem 'dalli'
 gem 'diff-lcs'
+gem 'nokogiri'
 
 group :development, :test do
   gem 'awesome_print', :require => false

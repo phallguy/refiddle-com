@@ -397,6 +397,7 @@ DEPENDENCIES
   mongoid-tags-arent-hard
   mongoid_slug!
   moped!
+  nokogiri
   non-stupid-digest-assets
   omniauth-facebook
   omniauth-openid
