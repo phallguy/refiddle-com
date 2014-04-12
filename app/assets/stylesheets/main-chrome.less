@@ -117,12 +117,11 @@ body,html
 
 #main-asside
 {
-  @asside-bg: darken( @body-bg, 5% );
 
   width: @asside-width;
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: @asside-ad-height + @grid-gutter-width;
   top: 0;
   padding: @grid-gutter-width / 2 @grid-gutter-width / 2 @grid-gutter-width * 2;
   background: @asside-bg;
@@ -141,7 +140,7 @@ body,html
   {
     content: " ";
     position: fixed;
-    bottom: 0;
+    bottom: @asside-ad-height + @grid-gutter-width;
     left: 0;
     width: @asside-width;
     height: @grid-gutter-width * 2;

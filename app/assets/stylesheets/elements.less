@@ -177,3 +177,21 @@
     text-decoration: underline;
   }
 }
+
+.asside-ad
+{
+  padding: @grid-gutter-width / 2;
+  position: fixed;
+  background: @asside-bg;
+  left: 0;
+  bottom: 0;
+  height: @asside-ad-height + @grid-gutter-width;
+  width: @asside-width;
+
+  @media( max-width: @screen-xs-max )
+  {
+    position: static;
+    width: 100%;
+    text-align:center;
+  }
+}
