@@ -1,0 +1,11 @@
+.hrspace
+.row
+  .col-sm-6.col-sm-offset-3
+    .panel.panel-danger
+      .panel-heading= title "Delete #{response_model_name(@model)}?"
+      .panel-body
+        %p Deleting a record cannot be undone. Are you sure?
+        = link_to "No, nevermind", @model, class: "btn btn-default"
+        = form_for @model, url: url_for, method: :delete, html: { class: "button_to" } do |f|
+          %input{ type: "hidden", name: "confirm_delete", value: "true" }
+          %button.btn.btn-danger YES DELETE

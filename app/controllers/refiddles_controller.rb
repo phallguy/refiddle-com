@@ -44,7 +44,7 @@ class RefiddlesController < ApplicationController
   end
 
   def destroy
-    render_destroy_response @refiddle
+    render_destroy_response @refiddle, with_confirmation: true
   end
 
 

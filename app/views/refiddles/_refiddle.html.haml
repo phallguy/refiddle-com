@@ -19,3 +19,5 @@
   .refiddle-actions
     = link_to "Open", refiddle_path(refiddle), class: "btn btn-default"
     = link_to "Fork", refiddle_path(refiddle,fork: true), class: "btn btn-default"
+    - if can?(:delete,refiddle) && ! refiddle.new_record?
+      = button_to "Delete", refiddle_path(refiddle), method: :delete, class: "btn btn-danger"

@@ -54,8 +54,6 @@
       = render "pre_asside"
       = render "refiddles/asside", refiddle: refiddle, f: f
 
-      - if can?(:delete,refiddle) && ! refiddle.new_record?
-        %p= button_to "Delete", refiddle_path(refiddle), method: :delete, class: "btn btn-danger"
 
 - content_for :page_actions do
   .btn-group.navbar-left
