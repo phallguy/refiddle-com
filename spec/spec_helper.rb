@@ -10,6 +10,7 @@ require 'rspec/rails'
 require 'factory_girl_rails'
 require 'rails/mongoid'
 require 'capybara/rspec'
+require 'capybara/poltergeist'
 
 # require 'rspec/autorun' (causes Zeus to run specs twice)
 
@@ -53,12 +54,20 @@ RSpec.configure do |config|
   config.after(:each) { GC.enable }
   config.before(:each){ FakeWeb.allow_net_connect = false }
 
+  Capybara.register_driver :poltergeist do |app|
+    Capybara::Poltergeist::Driver.new app, 
+      # debug: true,
+      window_size: [1024, 768]
+  end
+
   config.before(:suite) do
     DatabaseCleaner[:mongoid].strategy = :truncation
     DatabaseCleaner[:mongoid].clean_with :truncation
     ::Settings.reload!
     # @preloaded_models ||= ::Mongoid.preload_models
     # ::Mongoid::Tasks::Database.create_indexes
+
+    Capybara.javascript_driver = :poltergeist
   end
 
   config.before(:each) do

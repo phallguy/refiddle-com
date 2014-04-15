@@ -62,5 +62,4 @@ describe "Fiddling" do
     assigns(:refiddle).user.should == visitor
   end
 
-
 end

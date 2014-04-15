@@ -8,7 +8,7 @@ guard 'spring', :rspec_cli => '--color --profile 5' do
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^app/(.*)(\.erb|\.haml|\.jbuilder)$})      { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
   watch(%r{^app/controllers/(v\d+/)?(.+)_(controller)\.rb$})  { |m| 
-    ["spec/routing/#{m[2]}_routing_spec.rb", "spec/#{m[3]}s/#{m[2]}_#{m[3]}_spec.rb", "spec/acceptance/#{m[2]}_spec.rb", "spec/requests/#{m[2]}_spec.rb"] }
+    ["spec/routing/#{m[2]}_routing_spec.rb", "spec/#{m[3]}s/#{m[2]}_#{m[3]}_spec.rb", "spec/acceptance/#{m[2]}_spec.rb", "spec/requests/#{m[2]}_spec.rb", "spec/features/#{m[2]}_spec.rb"] }
   watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
   watch('config/routes.rb')                           { "spec/routing" }
   watch('app/controllers/application_controller.rb')  { "spec/controllers" }
