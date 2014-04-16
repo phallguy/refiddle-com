@@ -113,7 +113,7 @@ class App.Views.Refiddle extends Backbone.View
     @replaceEditor.getValue()
 
   updateMatches: =>
-    @updateMatchesDebounced ||= _.debounce @_updateMatches, @debounceRate, true
+    @updateMatchesDebounced ||= _.throttle @_updateMatches, @debounceRate, true
     @updateMatchesDebounced()
 
   _updateMatches: ->
@@ -176,10 +176,11 @@ class App.Views.Refiddle extends Backbone.View
         @updateReplacement() if @refreshReplacement
 
   resizeTextGroup: =>
-    @resizeTextGroupDebounced ||= _.debounce @_resizeTextGroup, @debounceRate, true
+    @resizeTextGroupDebounced ||= _.throttle @_resizeTextGroup, @debounceRate, true
     @resizeTextGroupDebounced()
 
   _resizeTextGroup: ->
+
     if $(window).width() >= 768
       availableHeight = $(window).height() - @textGroup.offset().top - 15 # grid gutter
 
