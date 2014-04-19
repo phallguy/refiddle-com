@@ -54,6 +54,8 @@ group :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'poltergeist'
+  gem 'capybara-screenshot'
+  gem 'launchy'
   gem 'rb-fsevent'
   gem 'guard'
   gem 'guard-rspec'

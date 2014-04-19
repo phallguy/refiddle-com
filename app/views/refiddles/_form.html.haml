@@ -80,4 +80,4 @@
       %input.form-control.share-code{ type: "text", value: short_url(refiddle.short_code)}
 - content_for :scripts do
   :coffee
-    new App.Views.Refiddle( el: document )
+    @refiddle = new App.Views.Refiddle( el: document )

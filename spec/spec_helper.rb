@@ -11,6 +11,7 @@ require 'factory_girl_rails'
 require 'rails/mongoid'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
+require 'capybara-screenshot/rspec'
 
 # require 'rspec/autorun' (causes Zeus to run specs twice)
 
@@ -57,6 +58,8 @@ RSpec.configure do |config|
   Capybara.register_driver :poltergeist do |app|
     Capybara::Poltergeist::Driver.new app, 
       # debug: true,
+      inspector: true,
+      js_errors: true,
       window_size: [1024, 768]
   end
 
@@ -68,6 +71,7 @@ RSpec.configure do |config|
     # ::Mongoid::Tasks::Database.create_indexes
 
     Capybara.javascript_driver = :poltergeist
+    Capybara.default_wait_time = 0.25
   end
 
   config.before(:each) do

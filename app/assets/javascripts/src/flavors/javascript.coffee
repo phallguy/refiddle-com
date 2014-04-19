@@ -15,6 +15,12 @@ class Flavors.JavaScript
 
 
   match: ( pattern, corpus, callback ) ->
+
+    unless regex = @makeRegex( pattern )
+      callback errors: 
+        [ message: "Invalid regex" ]
+      return
+
     matches =
       matchSummary:
         failed: 0
@@ -22,8 +28,6 @@ class Flavors.JavaScript
         total: 0
         tests: @isCorpusTest( corpus )
 
-    unless regex = @makeRegex( pattern )
-      return matches
 
     if matches.matchSummary.tests
       @matchTests( regex, corpus, matches )
