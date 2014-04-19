@@ -112,26 +112,30 @@ class App.Views.Refiddle extends Backbone.View
   getReplacement: ->
     @replaceEditor.getValue()
 
+  showErrors: (response) ->
+    @alert = new App.Views.Alert( response ).show()
+
+  hideErrors: ->
+    @alert && @alert.hide()
+
+
   updateMatches: =>
-    @updateMatchesDebounced ||= _.debounce @_updateMatches, @debounceRate, true
+    @updateMatchesDebounced ||= _.throttle @_updateMatches, @debounceRate, true
     @updateMatchesDebounced()
 
   _updateMatches: ->
     pattern = @getPattern()
     @applyOptions( pattern.options )
 
-    if @refreshingCorpus
-      @refreshCorpus = true
-    else
-      @refreshingCorpus = true
-      @refreshCorpus = false
-      $("#corpus").addClass( "refreshing" )
-      @flavor.match pattern, @getCorpus(), (matches) =>
-        $("#corpus").removeClass( "refreshing" )
-        @refreshingCorpus = false
-        @matches = matches
+    $("#corpus").addClass( "refreshing" )
+    @flavor.match pattern, @getCorpus(), (matches) =>
+      $("#corpus").removeClass( "refreshing" )
+      @matches = matches
+      if matches.errors
+        @showErrors(matches)
+      else
+        @hideErrors()
         @highlightMatches( @matches )
-        @updateMatches() if @refreshCorpus
 
 
   highlightMatches: (matches) =>
@@ -149,15 +153,18 @@ class App.Views.Refiddle extends Backbone.View
     undefined
 
   updateMatchResults: (matches) ->
-    summary = matches.matchSummary
+    if matches.error
 
-    $("html").toggleClass( "with-tests", !!summary.tests )
-    $("html").toggleClass( "tests-passing", summary.failed == 0 )
-    $("html").toggleClass( "tests-failing", summary.failed > 0 )
+    else
+      summary = matches.matchSummary
 
-    $(".match-results .total .count").text( summary.total )
-    $(".match-results .pass .count").text( summary.passed )
-    $(".match-results .fail .count").text( summary.failed )
+      $("html").toggleClass( "with-tests", !!summary.tests )
+      $("html").toggleClass( "tests-passing", summary.failed == 0 )
+      $("html").toggleClass( "tests-failing", summary.failed > 0 )
+
+      $(".match-results .total .count").text( summary.total )
+      $(".match-results .pass .count").text( summary.passed )
+      $(".match-results .fail .count").text( summary.failed )
 
 
   updateReplacement: =>
@@ -165,21 +172,20 @@ class App.Views.Refiddle extends Backbone.View
     @updateReplacementDebounced()
 
   _updateReplacement: ->
-    if @refreshingReplacement
-      @refreshReplacement
-    else
-      @refreshReplacement = false
-      @refreshingReplacement = true
-      @flavor.replace @getPattern(), @getCorpus(), @getReplacement(), (replacement) =>
-        @refreshingReplacement = false
+    $("#replace").addClass("refreshing")
+    @flavor.replace @getPattern(), @getCorpus(), @getReplacement(), (replacement) =>
+      $("#replace").removeClass("refreshing")
+      if replacement.errors
+        @showErrors(replacement)
+      else
         @replaceResults.text( replacement.replace )
-        @updateReplacement() if @refreshReplacement
 
   resizeTextGroup: =>
-    @resizeTextGroupDebounced ||= _.debounce @_resizeTextGroup, @debounceRate, true
+    @resizeTextGroupDebounced ||= _.throttle @_resizeTextGroup, @debounceRate, true
     @resizeTextGroupDebounced()
 
   _resizeTextGroup: ->
+
     if $(window).width() >= 768
       availableHeight = $(window).height() - @textGroup.offset().top - 15 # grid gutter
 

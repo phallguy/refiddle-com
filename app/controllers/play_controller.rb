@@ -6,10 +6,12 @@ class PlayController < ApplicationController
   # TODO anti-leeching to make sure requests originate from refiddle.com
 
   def replace
+    sleep 3
     render json: runner.replace( params[:pattern], params[:corpus_text], params[:replace_text] )
   end
 
   def evaluate
+    sleep 3
     render json: runner.match( params[:pattern], params[:corpus_text] )
   end
 

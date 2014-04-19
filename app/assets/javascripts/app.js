@@ -1,5 +1,5 @@
 (function() {
-  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2, _ref3, _ref4,
+  var CorpusTokenizer, Matcher, NegativeMatcher, PositiveMatcher, RegexReplaceTokenizer, RegexTokenizer, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -246,18 +246,76 @@
     Remote.prototype.remote = true;
 
     Remote.prototype.match = function(pattern, corpus, callback) {
-      return $.post(this.matchUri, {
-        pattern: "/" + pattern.pattern + "/" + pattern.options,
-        corpus_text: corpus
-      }, callback, "json");
+      if (this.matching) {
+        return this.nextMatch = arguments;
+      } else {
+        this.matching = true;
+        return this._match.apply(this, arguments);
+      }
+    };
+
+    Remote.prototype._match = function(pattern, corpus, callback) {
+      var _this = this;
+      return $.ajax({
+        url: this.matchUri,
+        method: "POST",
+        complete: function() {
+          var args;
+          if (_this.nextMatch) {
+            args = _this.nextMatch;
+            _this.nextMatch = null;
+            return _this._match.apply(_this, args);
+          } else {
+            return _this.matching = false;
+          }
+        },
+        success: callback,
+        error: function(xhr, status, error) {
+          return callback(xhr.responseJSON);
+        },
+        dataType: "json",
+        data: {
+          pattern: "/" + pattern.pattern + "/" + pattern.options,
+          corpus_text: corpus
+        }
+      });
     };
 
     Remote.prototype.replace = function(pattern, corpus, replacement, callback) {
-      return $.post(this.replaceUri, {
-        pattern: "/" + pattern.pattern + "/" + pattern.options,
-        corpus_text: corpus,
-        replace_text: replacement
-      }, callback, "json");
+      if (this.replacing) {
+        return this.nextReplace = arguments;
+      } else {
+        this.replacing = true;
+        return this._replace.apply(this, arguments);
+      }
+    };
+
+    Remote.prototype._replace = function(pattern, corpus, replacement, callback) {
+      var _this = this;
+      return $.ajax({
+        url: this.replaceUri,
+        method: "POST",
+        complete: function() {
+          var args;
+          if (_this.nextReplace) {
+            args = _this.nextReplace;
+            _this.nextReplace = null;
+            return _this._replace.apply(_this, args);
+          } else {
+            return _this.replacing = false;
+          }
+        },
+        success: callback,
+        error: function(xhr, status, error) {
+          return callback(xhr.responseJSON);
+        },
+        dataType: "json",
+        data: {
+          pattern: "/" + pattern.pattern + "/" + pattern.options,
+          corpus_text: corpus,
+          replace_text: replacement
+        }
+      });
     };
 
     return Remote;
@@ -299,6 +357,16 @@
 
     JavaScript.prototype.match = function(pattern, corpus, callback) {
       var matches, regex;
+      if (!(regex = this.makeRegex(pattern))) {
+        callback({
+          errors: [
+            {
+              message: "Invalid regex"
+            }
+          ]
+        });
+        return;
+      }
       matches = {
         matchSummary: {
           failed: 0,
@@ -307,9 +375,6 @@
           tests: this.isCorpusTest(corpus)
         }
       };
-      if (!(regex = this.makeRegex(pattern))) {
-        return matches;
-      }
       if (matches.matchSummary.tests) {
         this.matchTests(regex, corpus, matches);
       } else {
@@ -521,6 +586,85 @@
     return hideAlerts();
   });
 
+  App.Views.Alert = (function(_super) {
+    __extends(Alert, _super);
+
+    function Alert() {
+      this.hide = __bind(this.hide, this);
+      _ref4 = Alert.__super__.constructor.apply(this, arguments);
+      return _ref4;
+    }
+
+    Alert.prototype.events = {
+      "click": function() {
+        return this.hide();
+      }
+    };
+
+    Alert.prototype.className = function() {
+      return "alert alert-" + this.kind;
+    };
+
+    Alert.prototype.initialize = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      this.errors = options.errors;
+      this.message = options.message || this.createErrorMessage();
+      return this.kind = options.kind || (this.errors ? "danger" : "info");
+    };
+
+    Alert.prototype.show = function() {
+      var alerts,
+        _this = this;
+      alerts = $('.page-alerts');
+      alerts.find(".alert").remove();
+      this.render();
+      this.$el.addClass("slide up");
+      alerts.append(this.$el);
+      _.defer(function() {
+        _this.$el.addClass("in");
+        return _.delay(_this.hide, 7000);
+      });
+      return this;
+    };
+
+    Alert.prototype.render = function() {
+      this.$el.attr("class", this.className());
+      this.$el.html(this.message);
+      return this;
+    };
+
+    Alert.prototype.createErrorMessage = function() {
+      var err, result;
+      if (this.errors) {
+        return result = (function() {
+          var _i, _len, _ref5, _results;
+          _ref5 = this.errors;
+          _results = [];
+          for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
+            err = _ref5[_i];
+            _results.push("<p>" + (err.message || err) + "</p>");
+          }
+          return _results;
+        }).call(this);
+      } else {
+        return "There was an error.";
+      }
+    };
+
+    Alert.prototype.hide = function() {
+      var _this = this;
+      this.$el.removeClass("in");
+      return _.delay((function() {
+        return _this.$el.remove();
+      }), 3000);
+    };
+
+    return Alert;
+
+  })(Backbone.View);
+
   App.Views.Refiddle = (function(_super) {
     __extends(Refiddle, _super);
 
@@ -529,8 +673,8 @@
       this.updateReplacement = __bind(this.updateReplacement, this);
       this.highlightMatches = __bind(this.highlightMatches, this);
       this.updateMatches = __bind(this.updateMatches, this);
-      _ref4 = Refiddle.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      _ref5 = Refiddle.__super__.constructor.apply(this, arguments);
+      return _ref5;
     }
 
     Refiddle.prototype.literalRegex = /^\/[^\/]+\/\w*/m;
@@ -655,8 +799,16 @@
       return this.replaceEditor.getValue();
     };
 
+    Refiddle.prototype.showErrors = function(response) {
+      return this.alert = new App.Views.Alert(response).show();
+    };
+
+    Refiddle.prototype.hideErrors = function() {
+      return this.alert && this.alert.hide();
+    };
+
     Refiddle.prototype.updateMatches = function() {
-      this.updateMatchesDebounced || (this.updateMatchesDebounced = _.debounce(this._updateMatches, this.debounceRate, true));
+      this.updateMatchesDebounced || (this.updateMatchesDebounced = _.throttle(this._updateMatches, this.debounceRate, true));
       return this.updateMatchesDebounced();
     };
 
@@ -665,22 +817,17 @@
         _this = this;
       pattern = this.getPattern();
       this.applyOptions(pattern.options);
-      if (this.refreshingCorpus) {
-        return this.refreshCorpus = true;
-      } else {
-        this.refreshingCorpus = true;
-        this.refreshCorpus = false;
-        $("#corpus").addClass("refreshing");
-        return this.flavor.match(pattern, this.getCorpus(), function(matches) {
-          $("#corpus").removeClass("refreshing");
-          _this.refreshingCorpus = false;
-          _this.matches = matches;
-          _this.highlightMatches(_this.matches);
-          if (_this.refreshCorpus) {
-            return _this.updateMatches();
-          }
-        });
-      }
+      $("#corpus").addClass("refreshing");
+      return this.flavor.match(pattern, this.getCorpus(), function(matches) {
+        $("#corpus").removeClass("refreshing");
+        _this.matches = matches;
+        if (matches.errors) {
+          return _this.showErrors(matches);
+        } else {
+          _this.hideErrors();
+          return _this.highlightMatches(_this.matches);
+        }
+      });
     };
 
     Refiddle.prototype.highlightMatches = function(matches) {
@@ -705,13 +852,17 @@
 
     Refiddle.prototype.updateMatchResults = function(matches) {
       var summary;
-      summary = matches.matchSummary;
-      $("html").toggleClass("with-tests", !!summary.tests);
-      $("html").toggleClass("tests-passing", summary.failed === 0);
-      $("html").toggleClass("tests-failing", summary.failed > 0);
-      $(".match-results .total .count").text(summary.total);
-      $(".match-results .pass .count").text(summary.passed);
-      return $(".match-results .fail .count").text(summary.failed);
+      if (matches.error) {
+
+      } else {
+        summary = matches.matchSummary;
+        $("html").toggleClass("with-tests", !!summary.tests);
+        $("html").toggleClass("tests-passing", summary.failed === 0);
+        $("html").toggleClass("tests-failing", summary.failed > 0);
+        $(".match-results .total .count").text(summary.total);
+        $(".match-results .pass .count").text(summary.passed);
+        return $(".match-results .fail .count").text(summary.failed);
+      }
     };
 
     Refiddle.prototype.updateReplacement = function() {
@@ -721,23 +872,19 @@
 
     Refiddle.prototype._updateReplacement = function() {
       var _this = this;
-      if (this.refreshingReplacement) {
-        return this.refreshReplacement;
-      } else {
-        this.refreshReplacement = false;
-        this.refreshingReplacement = true;
-        return this.flavor.replace(this.getPattern(), this.getCorpus(), this.getReplacement(), function(replacement) {
-          _this.refreshingReplacement = false;
-          _this.replaceResults.text(replacement.replace);
-          if (_this.refreshReplacement) {
-            return _this.updateReplacement();
-          }
-        });
-      }
+      $("#replace").addClass("refreshing");
+      return this.flavor.replace(this.getPattern(), this.getCorpus(), this.getReplacement(), function(replacement) {
+        $("#replace").removeClass("refreshing");
+        if (replacement.errors) {
+          return _this.showErrors(replacement);
+        } else {
+          return _this.replaceResults.text(replacement.replace);
+        }
+      });
     };
 
     Refiddle.prototype.resizeTextGroup = function() {
-      this.resizeTextGroupDebounced || (this.resizeTextGroupDebounced = _.debounce(this._resizeTextGroup, this.debounceRate, true));
+      this.resizeTextGroupDebounced || (this.resizeTextGroupDebounced = _.throttle(this._resizeTextGroup, this.debounceRate, true));
       return this.resizeTextGroupDebounced();
     };
 

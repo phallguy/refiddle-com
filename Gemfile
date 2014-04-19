@@ -46,14 +46,17 @@ group :development do
 end
 
 group :test do
+  gem 'rspec-rails'
+  gem 'rspec-mocks'
+
   gem 'vcr', github: 'vcr/vcr'
   gem 'growl'  
   gem 'factory_girl_rails'
   gem 'capybara'
+  gem 'poltergeist'
+  gem 'capybara-screenshot'
+  gem 'launchy'
   gem 'rb-fsevent'
-  gem 'rspec-rails'
-  gem 'rspec'
-  gem 'rspec-mocks'
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-spring'

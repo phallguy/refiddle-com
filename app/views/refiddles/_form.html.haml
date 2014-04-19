@@ -57,7 +57,7 @@
 
 - content_for :page_actions do
   .btn-group.navbar-left
-    = link_to "#play", class: "btn btn-default navbar-btn" do
+    = link_to "#play", class: "btn btn-default navbar-btn play" do
       .visible-sm.visible-xs= icon :play, :fw
       .hidden-sm.hidden-xs 
         = icon :play, :fw
@@ -80,4 +80,4 @@
       %input.form-control.share-code{ type: "text", value: short_url(refiddle.short_code)}
 - content_for :scripts do
   :coffee
-    new App.Views.Refiddle( el: document )
+    @refiddle = new App.Views.Refiddle( el: document )

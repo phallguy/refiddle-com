@@ -6,7 +6,13 @@ VCR.configure do |c|
   c.configure_rspec_metadata!
 
   c.ignore_request do |request|
+    case 
+    # Ignore feature specs
+    when request.headers["user-agent"] == ["Ruby"] then true
     # Ignore local elastic search requests
-    URI(request.uri).port == 9200
+    when URI(request.uri).port == 9200 then true
+    else
+      binding.pry
+    end
   end
 end
