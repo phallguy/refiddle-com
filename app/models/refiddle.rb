@@ -192,7 +192,11 @@ class Refiddle
     PROTOCOL_PATTERN = /[a-z]+:\/\/?\w+/i
     LINK_PATTERN = /href|src|rel=/i
     STACKOVERFLOW_PATTERN = /https?:\/\/stackoverflow.com/i
-    SAMPLE_ATTRS = { regex: "/k[^\\s]*s/g", corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.", replace_text: "tacos" }.freeze
+    SAMPLE_ATTRS = {
+      regex: "/k[^\\s]*s/g",
+      corpus_text: "I can haz kittens. Mmmm. Tasty, tasty kittens.",
+      replace_text: "tacos"
+      }.freeze
 
     def validate_no_url(field)
       val = send(field)

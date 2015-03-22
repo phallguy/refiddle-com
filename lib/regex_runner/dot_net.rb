@@ -1,5 +1,5 @@
 class RegexRunner::DotNet < RegexRunner::Remote
   def server
-    "http://s364404335.onlinehome.us/regex/"
+    ENV['DOT_NET_RUNNER'] || "http://dotnet.refiddle.com/regex/"
   end  
 end

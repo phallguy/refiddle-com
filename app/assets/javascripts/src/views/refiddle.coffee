@@ -7,6 +7,11 @@ class App.Views.Refiddle extends Backbone.View
       e.preventDefault()
       @form.submit()
 
+    "click .play" : (e) ->
+      e.preventDefault()
+      @updateAll()
+
+
     "change .flavor-options [type=checkbox]" : (e) ->
       pattern = @getPattern()
       $t = $(e.currentTarget)
@@ -66,6 +71,9 @@ class App.Views.Refiddle extends Backbone.View
     @textGroup.find(".in").removeClass("in")
     @textGroup.find(".panel-collapse:first").addClass("in")
 
+    @updateAll()
+
+  updateAll: ->
     @updateMatches()
     @updateReplacement()
 
@@ -131,7 +139,7 @@ class App.Views.Refiddle extends Backbone.View
     @flavor.match pattern, @getCorpus(), (matches) =>
       $("#corpus").removeClass( "refreshing" )
       @matches = matches
-      if matches.errors
+      if matches.errors || matches.error
         @showErrors(matches)
       else
         @hideErrors()

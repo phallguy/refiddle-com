@@ -610,6 +610,9 @@
         options = {};
       }
       this.errors = options.errors;
+      if (options.error) {
+        this.errors || (this.errors = [options.error]);
+      }
       this.message = options.message || this.createErrorMessage();
       return this.kind = options.kind || (this.errors ? "danger" : "info");
     };
@@ -686,6 +689,10 @@
         e.preventDefault();
         return this.form.submit();
       },
+      "click .play": function(e) {
+        e.preventDefault();
+        return this.updateAll();
+      },
       "change .flavor-options [type=checkbox]": function(e) {
         var $t, option, pattern;
         pattern = this.getPattern();
@@ -744,6 +751,10 @@
       this.resizeTextGroup();
       this.textGroup.find(".in").removeClass("in");
       this.textGroup.find(".panel-collapse:first").addClass("in");
+      return this.updateAll();
+    };
+
+    Refiddle.prototype.updateAll = function() {
       this.updateMatches();
       return this.updateReplacement();
     };
@@ -821,7 +832,7 @@
       return this.flavor.match(pattern, this.getCorpus(), function(matches) {
         $("#corpus").removeClass("refreshing");
         _this.matches = matches;
-        if (matches.errors) {
+        if (matches.errors || matches.error) {
           return _this.showErrors(matches);
         } else {
           _this.hideErrors();
