@@ -9,6 +9,7 @@ class App.Views.Alert extends Backbone.View
 
   initialize: (options={}) ->
     @errors = options.errors
+    @errors ||= [options.error] if options.error
     @message = options.message || @createErrorMessage()
     @kind = options.kind || ( if @errors then "danger" else "info" )
 

@@ -20,3 +20,9 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 .yardoc
 db/tables
+_ReSharper*
+
+bin/
+obj/
+*.suo
+*.user

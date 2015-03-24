@@ -20,7 +20,7 @@ class RegexRunner::Remote < RegexRunner::Base
       res = Net::HTTP.post_form( URI.parse( "#{server}evaluate" ), { :pattern => pattern, :corpus_text => corpus_text } )
       JSON.parse( res.body )
     rescue
-      sjon = { :error => "Could not play fiddle on remote runner." }
+      json = { :error => "Could not play fiddle on remote runner." }
     end
   end
   
