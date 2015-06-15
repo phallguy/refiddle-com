@@ -6,6 +6,10 @@ twitter:
   app_id: xCz4V3WIFh82sqfhk6nOJWhGg
   secret:
 
+google:
+  app_id: 377269949378-9ebhhumbbq3vatua35h756ika3o4fmae.apps.googleusercontent.com
+  secret:
+
 stackexchange:
   app_id: 2860
   secret:

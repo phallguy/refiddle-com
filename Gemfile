@@ -11,7 +11,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'therubyracer', platforms: :ruby
 gem 'jbuilder', '~> 1.2'
-gem 'omniauth-openid'
+gem 'omniauth-google-oauth2', '~> 0.2.5'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-stackexchange'
